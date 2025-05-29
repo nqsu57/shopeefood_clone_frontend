@@ -5,7 +5,7 @@ import styles from './Navbar.module.css';
 
 function Navbar() {
     return (
-        <nav className={styles.navbar}>
+        <nav className={styles.navbar}> 
             {/* Logo */}
             <div className={styles.left}>
                 <div className={styles.logo}>
