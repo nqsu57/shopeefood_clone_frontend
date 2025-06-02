@@ -30,7 +30,19 @@ function SignUpPage() {
             return;
         }
         try {
-            const response = await fetch('/api/register', {
+            // const response = await fetch('/api/register', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //         phone: formData.phone,
+            //         email: formData.email,
+            //         password: formData.password,
+            //     }),
+            // });
+
+            const response = await fetch('http://localhost:8000/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +53,6 @@ function SignUpPage() {
                     password: formData.password,
                 }),
             });
-
             const result = await response.json();
 
             if (response.ok) {
