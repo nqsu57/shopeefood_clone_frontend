@@ -6,23 +6,23 @@
   border-radius: 8px;
   background-color: #fff;
   text-align: center;
-  
+
 }
 
 .form input {
- width: 100%; 
-  padding: 10px; 
-  margin-bottom: 15px; 
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 16px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 
 }
 
 .from .input:focus {
   outline: none;
-  border-color: #ff6200; 
+  border-color: #ff6200;
 }
 
 .form button {
@@ -34,4 +34,13 @@
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.alert_dange {
+  background-color: #f2dede;
+  color: #a94442;
+  border-color: #ebccd1;
+  padding: 1px;
+  margin-top: 10px;
+  margin-bottom: 10px
 }
