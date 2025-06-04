@@ -142,7 +142,8 @@ function SignUpPage() {
                 hideProgressBar
                 newestOnTop={false}
                 closeOnClick
-                autoClose={3000} />
+                autoClose={3000} 
+                limit={2} />
         </div>
     );
 }

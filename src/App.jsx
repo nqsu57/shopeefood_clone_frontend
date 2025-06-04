@@ -7,6 +7,7 @@ import Home from './pages/Home/Home';
 import Navbar from './component/Navbar/Navbar';
 import LoginPage from './pages/Login/LoginPage'; // Default import
 import Signup from './pages/register/RegisterPage';
+import Profile from './pages/User/UserPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/profile" element={<Profile />} />
           {/* <Route path="/" element={<Home />} /> */}
           {/* Các route khác như About, Contact có thể thêm ở đây */}
         </Routes>

@@ -2,18 +2,32 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import styles from './Login.module.css';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-
-
-
+  const checkInvalid = () => {
+    if (!email) {
+      toast.warn("Please input your email");
+      return false;
+    }
+    if (!password) {
+      toast.warn("Please input your password");
+      return false;
+    }
+    return true;
+  }
+  toast.dismiss();
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // ngăn reload trang
-
+    e.preventDefault();
+    const isValid = checkInvalid();
+    if (!isValid) {
+      return;
+    }
     try {
       const response = await axios.post(
         "http://localhost:8000/api/login",
@@ -33,22 +47,16 @@ const LoginPage: React.FC = () => {
       const token = response.data.access_token;
 
       localStorage.setItem("token", token);
-      setMessage("Đăng nhập thành công!");
-      console.log('Okeee');
-      // Điều hướng sang trang App
+      setMessage("Login successful!");
+      // console.log('Okeee');
       navigate("/");
     } catch (error) {
       console.error("Login error", error);
-      setMessage("Sai tên đăng nhập hoặc mật khẩu!");
+      toast.error("Email or password is incorrect");
+      setMessage("Email or password is incorrect");
     }
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log(email);
-  //   console.log(password);
-
-  // };
   return (
     <>
       <div className={styles.container}>
@@ -56,27 +64,32 @@ const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className='input-field'>
             <input
-              type="email"
+              type="text"
               placeholder="Email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              required
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              required
             />
           </div>
           <button type="submit">Sign In</button>
         </form>
-        <div className={styles.alert_dange}>{message && <p>{message}</p>}</div>
-      
-
+        {/* <div className={styles.alert_dange}>{message && <p>{message}</p>}</div> */}
       </div>
       <div><p>Don't have an account? <Link to="/signup">Sign Up</Link></p></div>
+      <ToastContainer
+        className={"toast_container"}
+        position="top-center"
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        autoClose={3000}
+        limit={2}  />
+
     </>
   );
 };

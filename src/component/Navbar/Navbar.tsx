@@ -18,14 +18,6 @@ function Navbar() {
 
             {/* Search */}
             <div className={styles.center}>
-                {/* <input
-                    type="text"
-                    placeholder="Find places, item, address..."
-                    className={styles.searchInput}
-                />
-                <button type='button' className='btn btn-search'>
-                 <FaSearch />
-                </button> */}
                 <input
                     type="text"
                     placeholder="Find places, item, address..."
@@ -39,6 +31,9 @@ function Navbar() {
             {/* Đăng nhập */}
             <div className={styles.right}>    
                 <Link to="/login" className={styles.loginButton}>Sign in</Link>
+            </div>
+            <div className={styles.user}>
+                <Link to="/profile">Account</Link>
             </div>
         </nav>
     );
