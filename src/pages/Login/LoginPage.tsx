@@ -43,13 +43,11 @@ const LoginPage: React.FC = () => {
       );
 
       // console.log("RES", response);
-
       const token = response.data.access_token;
-
       localStorage.setItem("token", token);
+      console.log("Token login", token)
       setMessage("Login successful!");
-      // console.log('Okeee');
-      navigate("/");
+      navigate("/profile");
     } catch (error) {
       console.error("Login error", error);
       toast.error("Email or password is incorrect");
