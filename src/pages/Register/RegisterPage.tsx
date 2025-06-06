@@ -6,6 +6,7 @@ import style from "./Register.module.css";
 
 function SignUpPage() {
     const [formData, setFormData] = useState({
+        name: "",
         phone: "",
         email: "",
         password: "",
@@ -28,7 +29,11 @@ function SignUpPage() {
     };
     toast.dismiss(); 
     const notify = () => {
-        if (!formData.email) {
+        if (!formData.name){
+            toast.warn("Please input full name");
+            setError('');
+            return false;
+        } else if (!formData.email) {
             toast.warn("Please input your email");
             setError('');
             return false;
@@ -70,6 +75,7 @@ function SignUpPage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    name: formData.name,
                     phone: formData.phone,
                     email: formData.email,
                     password: formData.password,
@@ -102,6 +108,12 @@ function SignUpPage() {
                     <label>Phone number</label>
                     <input type="tel" placeholder="Phone number" required />
                 </div> */}
+                <input 
+                    name="name"
+                    type="text"
+                    placeholder="Full name"
+                    onChange={handleChange}
+                    value={formData.name}/>
                 <input
                     name="phone"
                     type="tel"

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./User.module.css";
 import axios from "axios";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { data } from "react-router-dom";
 
 function UserPage() {
@@ -8,6 +10,11 @@ function UserPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
+  const [originalUser, setOriginalUser] = useState({
+    name: "",
+    phone: "",
+    gender: "Default",
+  });
   useEffect(() => {
     if (!showChangePassword) {
       setNewPassword("");
@@ -16,9 +23,10 @@ function UserPage() {
   }, [showChangePassword]);
 
   const [user, setUser] = useState({
-    // full_name: "",
+    name: "",
     phone: "",
     email: "",
+    gender: "Default",
   });
 
   useEffect(() => {
@@ -32,9 +40,10 @@ function UserPage() {
           },
         });
         setUser(res.data);
+        setOriginalUser(res.data);
         console.log(res);
       } catch (error) {
-        console.error("Không thể lấy thông tin user", error);
+        console.error("Unable to retrieve user information", error);
       }
     };
 
@@ -43,18 +52,17 @@ function UserPage() {
 
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token");
-    console.log("current", currentPassword);
-    console.log("new", newPassword);
-    console.log("confirm", confirmPassword);
+    let hasChanges = false;
 
+    // Handle change password
     if (showChangePassword) {
       if (!currentPassword || !newPassword || !confirmPassword) {
-        alert("Vui lòng điền đầy đủ thông tin mật khẩu.");
+        toast.warn("Please fill in all the required password information.");
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        alert("Mật khẩu mới không khớp.");
+        toast.warn("The new passwords do not match");
         return;
       }
 
@@ -74,19 +82,19 @@ function UserPage() {
           }
         );
 
-        alert("Đổi mật khẩu thành công!");
+        toast.success("Password changed successfully");
         setShowChangePassword(false);
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } catch (error: any) {
-        alert(error.response?.data?.detail || "Đổi mật khẩu thất bại.");
+        toast.warn(error.response?.data?.detail || "Unable to change the password.");
       }
-    } else {
-      // Xử lý cập nhật thông tin khác nếu cần
-      alert("Thông tin người dùng đã được lưu (chưa xử lý cụ thể).");
     }
   };
+
+  // Handle change user information
+
 
   return (
     <div className={styles.container}>
@@ -100,16 +108,16 @@ function UserPage() {
           <h3>Ngô Quốc Sự</h3>
         </div>
         <ul className={styles.menu}>
-          <li className={styles.active}>Cập nhật tài khoản</li>
-          <li>Thông tin đơn hàng</li>
-          <li>Phương thức thanh toán</li>
+          <li className={styles.active}>Update account</li>
+          <li>Order information</li>
+          <li>Payment method</li>
         </ul>
       </aside>
 
       <main className={styles.profile}>
         <div className={styles.profileHeader}>
-          <h2>Thông tin người dùng</h2>
-          <button className={styles.btnDelete}>Xóa tài khoản</button>
+          <h2>User information</h2>
+          {/* <button className={styles.btnDelete}>Xóa tài khoản</button> */}
         </div>
 
         <div className={styles.avatarUpload}>
@@ -120,25 +128,32 @@ function UserPage() {
           />
           <div className={styles.uploadArea}>
             <input type="file" />
-            <button className={styles.btn}>Cập nhật</button>
+            <button className={styles.btn}>Update</button>
             <p className={styles.note}>
-              Chấp nhận GIF, JPEG, PNG, BMP với kích thước tối đa 5.0 MB
+              Accepts GIF, JPEG, PNG, BMP with a maximum size of 5.0 MB
             </p>
           </div>
         </div>
         <hr />
         <div className={styles.form}>
           <div className={styles.informationField}>
-            <label>Tên</label>
-            <input type="text" />
+            <label>Name</label>
+            <input
+              type="text"
+              value={user.name}
+              onChange={(e) => setUser({ ...user, name: e.target.value })}
+            />
           </div>
 
           <div className={styles.informationField}>
-            <label>Giới tính</label>
-            <select defaultValue="Default">
+            <label>Gender</label>
+            <select
+              defaultValue="Default"
+              value={user.gender}
+              onChange={(e) => setUser({ ...user, gender: e.target.value })}>
               <option>Default</option>
-              <option>Nam</option>
-              <option>Nữ</option>
+              <option>Male</option>
+              <option>Female</option>
             </select>
           </div>
 
@@ -150,7 +165,7 @@ function UserPage() {
           {showChangePassword && (
             <>
               <div className={styles.informationField}>
-                <label>Nhập mật khẩu hiện tại</label>
+                <label>Enter current password</label>
                 <input
                   type="password"
                   value={currentPassword}
@@ -158,7 +173,7 @@ function UserPage() {
                 />
               </div>
               <div className={styles.informationField}>
-                <label>Mật khẩu mới</label>
+                <label>New password</label>
                 <input
                   type="password"
                   value={newPassword}
@@ -166,7 +181,7 @@ function UserPage() {
                 />
               </div>
               <div className={styles.informationField}>
-                <label>Nhập lại mật khẩu mới</label>
+                <label>Re-enter new password</label>
                 <input
                   type="password"
                   value={confirmPassword}
@@ -183,11 +198,11 @@ function UserPage() {
                 setShowChangePassword(!showChangePassword);
               }}
             >
-              Đổi mật khẩu
+              Change password
             </a>
           </div>
           <button className={styles.btnSave} onClick={handleSaveChanges}>
-            Lưu thay đổi
+            Save changes
           </button>
 
           {showChangePassword && (
@@ -200,7 +215,7 @@ function UserPage() {
                 setConfirmPassword("");
               }}
             >
-              Huỷ
+              Cancel
             </button>
           )}
         </div>
@@ -208,10 +223,10 @@ function UserPage() {
         <hr />
 
         <div className={styles.phoneSection}>
-          <label>Số điện thoại</label>
+          <label>Phone number</label>
           <div className={styles.phoneVerified}>
             <input type="tel" value={user.phone} />
-            <button className={styles.btn}>Cập nhật số điện thoại</button>
+            <button className={styles.btn}>Update phone number</button>
           </div>
         </div>
       </main>
