@@ -1,58 +1,72 @@
 .navbar {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 12px 24px;
     background-color: white;
-    border-bottom: 1px solid #ddd;  
-    position: fixed;
-    top: 0;
     width: 100%;
     z-index: 1000;
-    /* transform: translateX(-50%); */
+    min-height: 60px;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
 
 }
 
-.left, .right {
-    flex: 0 0 auto;
+
+.left {
+    /* padding-left: 100px; */
+    margin-left: 200px;
+
+    /* text-align: center; */
+    z-index: 99;
+    /* justify-content: center; */
 }
 
 .center {
-    flex: 1 1 auto;
-    /* chiếm phần còn lại */
     display: flex;
+    /* align-items: center; */
+    flex: 1;
     justify-content: center;
 }
 
 .logo img {
     height: 40px;
-    margin-left: 30rem;
 }
 
 .searchInput {
-    width: 100%;
-    max-width: 500px;
     padding: 8px 12px;
-    border-radius: 20px;
     border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    width: 300px;
+    font-size: 14px;
+}
+
+.searchButton {
+    padding: 8px 12px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
 }
 
 .loginButton {
     padding: 8px 16px;
     background-color: white;
-    color: #ff5722;
-    border: 1px solid #ff5722;
-    border-radius: 4px;
+    border: 2px solid #ff4500;
+    border-radius: 6px;
     font-weight: bold;
-    /* cursor: pointer; */
-    margin-right: 30rem;
+    color: #ff4500;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
 }
 
 /* .loginButton:hover {
     background-color: #ffe3d5;
 } */
 
-.searchInput {
+/* .searchInput {
   flex: 1;
   padding: 12px 16px;
   border: 1px solid black;
@@ -60,9 +74,9 @@
   outline: none;
 }
 
-.searchButton {
-  /* background-color: #1976d2;  */
-  color: rgb(19, 10, 10);
+.searchButton { */
+/* background-color: #1976d2;  */
+/* color: rgb(19, 10, 10);
   padding: 0 16px;
   border: none;
   display: flex;
@@ -70,4 +84,4 @@
   justify-content: center;
   cursor: pointer;
   font-size: 18px;
-}
+} */
