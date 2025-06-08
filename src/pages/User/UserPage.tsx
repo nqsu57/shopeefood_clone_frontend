@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./User.module.css";
 import axios from "axios";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { data } from "react-router-dom";
 
 function UserPage() {
@@ -15,19 +15,19 @@ function UserPage() {
     phone: "",
     gender: "Default",
   });
-  useEffect(() => {
-    if (!showChangePassword) {
-      setNewPassword("");
-      setConfirmPassword("");
-    }
-  }, [showChangePassword]);
-
   const [user, setUser] = useState({
     name: "",
     phone: "",
     email: "",
     gender: "Default",
   });
+  useEffect(() => {
+    if (!showChangePassword) {
+      setNewPassword("");
+      setConfirmPassword("");
+      setCurrentPassword("");
+    }
+  }, [showChangePassword]);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -39,8 +39,14 @@ function UserPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUser(res.data);
-        setOriginalUser(res.data);
+        setUser({
+          ...res.data,
+          gender: res.data.gender || "Default",
+        });
+        setOriginalUser({
+          ...res.data,
+          gender: res.data.gender || "Default",
+        });
         console.log(res);
       } catch (error) {
         console.error("Unable to retrieve user information", error);
@@ -52,49 +58,103 @@ function UserPage() {
 
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token");
-    let hasChanges = false;
 
     // Handle change password
-    if (showChangePassword) {
+    // if (showChangePassword) {
+    //   if (!currentPassword || !newPassword || !confirmPassword) {
+    //     toast.warn("Please fill in all the required password information.");
+    //     return;
+    //   }
+
+    //   if (newPassword !== confirmPassword) {
+    //     toast.warn("The new passwords do not match");
+    //     return;
+    //   }
+
+    //   try {
+    //     const response = await axios.put(
+    //       "http://localhost:8000/api/users/change_password_user",
+    //       {
+    //         current_password: currentPassword,
+    //         new_password: newPassword,
+    //         confirm_password: confirmPassword,
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     toast.success("Password changed successfully");
+    //     setShowChangePassword(false);
+    //     setCurrentPassword("");
+    //     setNewPassword("");
+    //     setConfirmPassword("");
+    //   } catch (error: any) {
+    //     toast.warn(
+    //       error.response?.data?.detail || "Unable to change the password."
+    //     );
+    //     return;
+    //   }
+    // }
+    // Handle change user information
+    const nameChanged = user.name !== originalUser.name;
+    const genderChanged = user.gender != originalUser.gender;
+    const phoneChanged = user.phone != originalUser.phone;
+    const isPasswordChange = currentPassword || newPassword || confirmPassword;
+    if (!nameChanged && !genderChanged && !phoneChanged && !isPasswordChange) {
+      toast.info("No changes to update");
+      return;
+    }
+    if (isPasswordChange) {
       if (!currentPassword || !newPassword || !confirmPassword) {
-        toast.warn("Please fill in all the required password information.");
+        toast.warn("Please fill in all password fields.");
         return;
       }
-
       if (newPassword !== confirmPassword) {
-        toast.warn("The new passwords do not match");
+        toast.warn("New passwords do not match.");
         return;
       }
+    }
+    const payload: any = {};
+    if (nameChanged) payload.name = user.name;
+    if (genderChanged) payload.gender = user.gender;
+    if (phoneChanged) payload.phone = user.phone;
+    if (isPasswordChange) {
+      payload.current_password = currentPassword;
+      payload.new_password = newPassword;
+      payload.confirm_password = confirmPassword;
+    }
 
-      try {
-        const response = await axios.put(
-          "http://localhost:8000/api/users/change_password_user",
-          {
-            current_password: currentPassword,
-            new_password: newPassword,
-            confirm_password: confirmPassword,
+    console.log(payload);
+    try {
+      await axios.put(
+        "http://localhost:8000/api/users/update_profile",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        }
+      );
 
-        toast.success("Password changed successfully");
-        setShowChangePassword(false);
+      toast.success("Profile updated successfully.");
+
+      if (isPasswordChange) {
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
-      } catch (error: any) {
-        toast.warn(error.response?.data?.detail || "Unable to change the password.");
+        setShowChangePassword(false);
       }
+
+      setOriginalUser({ ...user });
+    } catch (error: any) {
+      toast.error(error.response?.data?.detail || "Failed to update profile.");
     }
   };
-
-  // Handle change user information
-
 
   return (
     <div className={styles.container}>
@@ -105,7 +165,7 @@ function UserPage() {
             alt="Avatar"
             className={styles.avatar}
           />
-          <h3>Ngô Quốc Sự</h3>
+          <h3>{user.name}</h3>
         </div>
         <ul className={styles.menu}>
           <li className={styles.active}>Update account</li>
@@ -148,9 +208,9 @@ function UserPage() {
           <div className={styles.informationField}>
             <label>Gender</label>
             <select
-              defaultValue="Default"
               value={user.gender}
-              onChange={(e) => setUser({ ...user, gender: e.target.value })}>
+              onChange={(e) => setUser({ ...user, gender: e.target.value })}
+            >
               <option>Default</option>
               <option>Male</option>
               <option>Female</option>
@@ -161,6 +221,11 @@ function UserPage() {
             <label>Email</label>
             {/* <input type="email" value={user.email} readOnly={true} /> */}
             <span>{user.email}</span>
+          </div>
+          <div className={styles.informationField}>
+            <label>Phone</label>
+            <input type="tel" value={user.phone} 
+             onChange={(e) => setUser({ ...user, phone: e.target.value })}/>
           </div>
           {showChangePassword && (
             <>
@@ -222,13 +287,13 @@ function UserPage() {
 
         <hr />
 
-        <div className={styles.phoneSection}>
+        {/* <div className={styles.phoneSection}>
           <label>Phone number</label>
           <div className={styles.phoneVerified}>
             <input type="tel" value={user.phone} />
             <button className={styles.btn}>Update phone number</button>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );
