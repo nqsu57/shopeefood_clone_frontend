@@ -10,6 +10,7 @@ import Signup from './pages/register/RegisterPage';
 import Profile from './pages/User/UserPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthProvider } from './AuthContext';
 function App() {
   return (
     <>
@@ -20,19 +21,19 @@ function App() {
         newestOnTop={false}
         closeOnClick
         className="toast_container" />
-      <Navbar />
-      <main className="p-4">
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
-          {/* <Route path="/" element={<Home />} /> */}
-          {/* Các route khác như About, Contact có thể thêm ở đây */}
-        </Routes>
-      </main>
+      <AuthProvider>
+        <Navbar />
+        <main className="p-4">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/" element={<Home />} /> */}
+            {/* Các route khác như About, Contact có thể thêm ở đây */}
+          </Routes>
+        </main>
+      </AuthProvider>
     </>
-
-
   );
 }
 

@@ -4,11 +4,14 @@ import styles from './Login.module.css';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../../AuthContext';
+
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { login } = useAuth();
   const navigate = useNavigate();
   const checkInvalid = () => {
     if (!email) {
@@ -46,6 +49,7 @@ const LoginPage: React.FC = () => {
       const token = response.data.access_token;
       localStorage.setItem("token", token);
       console.log("Token login", token)
+      login();
       setMessage("Login successful!");
       navigate("/profile");
     } catch (error) {

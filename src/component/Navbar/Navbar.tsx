@@ -1,11 +1,25 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import styles from './Navbar.module.css';
+import { AuthContext, useAuth } from '../../AuthContext';
 
 function Navbar() {
+    // const { isLoggedIn, login, logout } = useContext(AuthContext);
+    const { isLoggedIn, login, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+    const redirectLogin = () => {
+        navigate('/login');
+    }
+
+
     return (
-        <nav className={styles.navbar}> 
+        <nav className={styles.navbar}>
             {/* Logo */}
             <div className={styles.left}>
                 <div className={styles.logo}>
@@ -28,9 +42,20 @@ function Navbar() {
                 </button>
             </div>
 
-            {/* Đăng nhập */}
-            <div className={styles.right}>    
-                <Link to="/login" className={styles.loginButton}>Sign in</Link>
+            {/* <div className={styles.right}>
+            <Link to="/login" className={styles.loginButton}>Sign in</Link>
+        </div> */}
+            <div>
+                {!isLoggedIn ? (
+                    <button onClick={redirectLogin} className={styles.loginButton}>
+                        Sign In
+                    </button>
+                ) : (
+
+                    <button onClick={handleLogout} className={styles.loginButton}>
+                        Log out
+                    </button>
+                )}
             </div>
             <div className={styles.user}>
                 <Link to="/profile">Account</Link>
