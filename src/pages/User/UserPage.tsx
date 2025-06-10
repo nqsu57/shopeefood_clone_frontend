@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { data } from "react-router-dom";
+// import AvatarUpload from "../../component/Avatar/Avatar";
 
 function UserPage() {
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -14,12 +15,14 @@ function UserPage() {
     name: "",
     phone: "",
     gender: "Default",
+    avatarUrl: "",
   });
   const [user, setUser] = useState({
     name: "",
     phone: "",
     email: "",
     gender: "Default",
+    avatarUrl: "",
   });
   useEffect(() => {
     if (!showChangePassword) {
@@ -59,47 +62,6 @@ function UserPage() {
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token");
 
-    // Handle change password
-    // if (showChangePassword) {
-    //   if (!currentPassword || !newPassword || !confirmPassword) {
-    //     toast.warn("Please fill in all the required password information.");
-    //     return;
-    //   }
-
-    //   if (newPassword !== confirmPassword) {
-    //     toast.warn("The new passwords do not match");
-    //     return;
-    //   }
-
-    //   try {
-    //     const response = await axios.put(
-    //       "http://localhost:8000/api/users/change_password_user",
-    //       {
-    //         current_password: currentPassword,
-    //         new_password: newPassword,
-    //         confirm_password: confirmPassword,
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${token}`,
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     );
-
-    //     toast.success("Password changed successfully");
-    //     setShowChangePassword(false);
-    //     setCurrentPassword("");
-    //     setNewPassword("");
-    //     setConfirmPassword("");
-    //   } catch (error: any) {
-    //     toast.warn(
-    //       error.response?.data?.detail || "Unable to change the password."
-    //     );
-    //     return;
-    //   }
-    // }
-    // Handle change user information
     const nameChanged = user.name !== originalUser.name;
     const genderChanged = user.gender != originalUser.gender;
     const phoneChanged = user.phone != originalUser.phone;
@@ -152,7 +114,13 @@ function UserPage() {
 
       setOriginalUser({ ...user });
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || "Failed to update profile.");
+      const detail = error.response?.data?.detail;
+      if (detail === "Current password is incorrect.") {
+        toast.error("Current password is incorrect. Please try again.");
+      } else {
+        toast.error(detail || "Failed to update profile.");
+      }
+      // toast.error(error.response?.data?.detail || "Failed to update profile.");
     }
   };
 
@@ -161,7 +129,7 @@ function UserPage() {
       <aside className={styles.sidebar}>
         <div className={styles.userInfo}>
           <img
-            src="http://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://img7.thuthuatphanmem.vn/uploads/2023/08/18/meme-anh-da-den-cham-hoi_052117827.jpg"
+            src={user.avatarUrl}
             alt="Avatar"
             className={styles.avatar}
           />
@@ -180,20 +148,22 @@ function UserPage() {
           {/* <button className={styles.btnDelete}>Xóa tài khoản</button> */}
         </div>
 
-        <div className={styles.avatarUpload}>
-          <img
-            src="http://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://img7.thuthuatphanmem.vn/uploads/2023/08/18/meme-anh-da-den-cham-hoi_052117827.jpg"
-            alt="Avatar"
-            className={styles.avatarPreview}
-          />
-          <div className={styles.uploadArea}>
-            <input type="file" />
-            <button className={styles.btn}>Update</button>
-            <p className={styles.note}>
-              Accepts GIF, JPEG, PNG, BMP with a maximum size of 5.0 MB
-            </p>
-          </div>
-        </div>
+        {/* <div className={styles.avatarUpload}>
+            <img
+              src=""
+              alt="Avatar"
+              className={styles.avatarPreview}
+            />
+            <div className={styles.uploadArea}>
+              <input type="file"/>
+              <button className={styles.btn}>Update</button>
+              <p className={styles.note}>
+                Accepts GIF, JPEG, PNG, BMP with a maximum size of 5.0 MB
+              </p>
+            </div>
+          </div> */}
+       {/* <AvatarUpload onUploadSuccess={handleAvatarUpload} /> */}
+
         <hr />
         <div className={styles.form}>
           <div className={styles.informationField}>
@@ -224,8 +194,8 @@ function UserPage() {
           </div>
           <div className={styles.informationField}>
             <label>Phone</label>
-            <input type="tel" value={user.phone} 
-             onChange={(e) => setUser({ ...user, phone: e.target.value })}/>
+            <input type="tel" value={user.phone}
+              onChange={(e) => setUser({ ...user, phone: e.target.value })} />
           </div>
           {showChangePassword && (
             <>
@@ -284,17 +254,15 @@ function UserPage() {
             </button>
           )}
         </div>
-
-        <hr />
-
-        {/* <div className={styles.phoneSection}>
-          <label>Phone number</label>
-          <div className={styles.phoneVerified}>
-            <input type="tel" value={user.phone} />
-            <button className={styles.btn}>Update phone number</button>
-          </div>
-        </div> */}
       </main>
+      <ToastContainer
+        className={"toast_container"}
+        position="top-center"
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        autoClose={3000}
+        limit={2} />
     </div>
   );
 }

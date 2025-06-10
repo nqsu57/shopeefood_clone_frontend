@@ -1,0 +1,41 @@
+.avatarUpload {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.avatarPreview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.uploadArea {
+  display: inline-block;
+  text-align: center;
+}
+
+/* .uploadArea input[type="file"] {
+  display: none;
+} */
+
+.uploadArea button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.uploadArea button:hover {
+  background-color: #45a049;
+}
+
+.note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+}
