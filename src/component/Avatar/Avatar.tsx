@@ -1,41 +1,109 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import styles from './Avatar.module.css'; // Tùy chỉnh CSS riêng nếu cần
 
-// const AvatarUpload = ({ onUploadSuccess }) => {
-//   const [imageUrl, setImageUrl] = useState('');
-//   const [uploading, setUploading] = useState(false);
+interface AvatarUploaderProps {
+    initialAvatarUrl: string;
+    onAvatarUploaded: (url: string) => void;
+}
 
-//   const handleImageChange = async (e: any) => {
-//     const file = e.target.files[0];
-//     if (!file) return;
+const AvatarUploader: React.FC<AvatarUploaderProps> = ({ initialAvatarUrl, onAvatarUploaded }) => {
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-//     setUploading(true);
-//     const formData = new FormData();
-//     formData.append('file', file);
-//     formData.append('upload_preset', 'your_upload_preset'); // Thay bằng preset của bạn
+    useEffect(() => {
+        if (!selectedFile) {
+            setPreviewUrl(initialAvatarUrl || null);
+        }
+    }, [initialAvatarUrl]);
 
-//     try {
-//       const response = await axios.post(
-//         'https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', // Thay bằng cloud_name của bạn
-//         formData
-//       );
-//       const url = response.data.secure_url;
-//       setImageUrl(url);
-//       onUploadSuccess(url); // Gửi URL về component cha/backend
-//     } catch (error) {
-//       console.error('Upload error', error);
-//     } finally {
-//       setUploading(false);
-//     }
-//   };
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-//   return (
-//     <div>
-//       <input type="file" onChange={handleImageChange} accept="image/*" />
-//       {uploading && <p>Uploading...</p>}
-//       {imageUrl && <img src={imageUrl} alt="Avatar" width={100} />}
-//     </div>
-//   );
-// };
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be under 5MB');
+            return;
+        }
 
-// export default AvatarUpload;
+        setSelectedFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('upload_preset', 'unsigned_avatar_upload');
+
+        try {
+            const res = await axios.post('https://api.cloudinary.com/v1_1/dfn2gpymk/image/upload', formData);
+            const imageUrl = res.data.secure_url;
+            onAvatarUploaded(imageUrl);
+            setPreviewUrl(null);
+            setSelectedFile(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        } catch (err) {
+            console.error('Upload failed', err);
+            alert('Upload failed. Try again.');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div style={{ marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <img
+                    src={previewUrl || initialAvatarUrl || "/default-avatar.png"}
+                    alt="Avatar Preview"
+                    style={{
+                        width: 96,
+                        height: 96,
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '1px solid #ccc',
+                    }}
+                />
+                <div>
+                    <label>
+                        <span style={{ marginRight: 8 }}>Upload from</span>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            disabled={uploading}
+                            ref={fileInputRef}
+                        />
+                    </label>
+                    <div style={{ fontSize: 12, color: '#666' }}>
+                        GIF, JPEG, PNG, BMP accepted with a maximum size of 5.0 MB
+                    </div>
+                    <button
+                        style={{
+                            marginTop: 8,
+                            backgroundColor: '#2c5282',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '6px 16px',
+                            borderRadius: 4,
+                            cursor: selectedFile && !uploading ? 'pointer' : 'not-allowed',
+                        }}
+                        // disabled={!selectedFile || uploading}
+                        onClick={handleUpload}
+                    >
+                        {uploading ? 'Updating...' : 'Update'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AvatarUploader;

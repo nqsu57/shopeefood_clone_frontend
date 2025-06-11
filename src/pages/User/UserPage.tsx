@@ -3,27 +3,30 @@ import styles from "./User.module.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { data } from "react-router-dom";
-// import AvatarUpload from "../../component/Avatar/Avatar";
+import AvatarUploader from "../../component/Avatar/Avatar";
 
 function UserPage() {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
+
   const [originalUser, setOriginalUser] = useState({
     name: "",
     phone: "",
     gender: "Default",
-    avatarUrl: "",
+    avatar_url: "",
   });
+
   const [user, setUser] = useState({
+    id: "",
     name: "",
     phone: "",
     email: "",
     gender: "Default",
-    avatarUrl: "",
+    avatar_url: "",
   });
+
   useEffect(() => {
     if (!showChangePassword) {
       setNewPassword("");
@@ -32,25 +35,34 @@ function UserPage() {
     }
   }, [showChangePassword]);
 
+  // useEffect(() => {
+  //   console.log("Avatar updated → user.avatar_url:", user.avatar_url);
+  // }, [user.avatar_url]);
   useEffect(() => {
     const fetchUserInfo = async () => {
       const token = localStorage.getItem("token");
-      console.log("Token", token);
       try {
         const res = await axios.get("http://localhost:8000/api/get_user", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUser({
-          ...res.data,
-          gender: res.data.gender || "Default",
-        });
-        setOriginalUser({
-          ...res.data,
-          gender: res.data.gender || "Default",
-        });
-        console.log(res);
+
+        console.log("RESPONSE USER DATA:", res);
+        const data = res.data;
+
+        const id = data.id || data._id || data.user_id || "";
+        console.log(id);
+        const name = data.name || "";
+        const phone = data.phone || "";
+        const email = data.email || "";
+        const gender = data.gender || "Default";
+        const avatar_url = data.avatar_url || "";
+        ;
+        console.log(data.avatar_url);
+        setUser({ id, name, phone, email, gender, avatar_url });
+        setOriginalUser({ name, phone, gender, avatar_url });
+
       } catch (error) {
         console.error("Unable to retrieve user information", error);
       }
@@ -66,20 +78,24 @@ function UserPage() {
     const genderChanged = user.gender != originalUser.gender;
     const phoneChanged = user.phone != originalUser.phone;
     const isPasswordChange = currentPassword || newPassword || confirmPassword;
+
     if (!nameChanged && !genderChanged && !phoneChanged && !isPasswordChange) {
       toast.info("No changes to update");
       return;
     }
+
     if (isPasswordChange) {
       if (!currentPassword || !newPassword || !confirmPassword) {
         toast.warn("Please fill in all password fields.");
         return;
       }
+
       if (newPassword !== confirmPassword) {
         toast.warn("New passwords do not match.");
         return;
       }
     }
+
     const payload: any = {};
     if (nameChanged) payload.name = user.name;
     if (genderChanged) payload.gender = user.gender;
@@ -90,7 +106,6 @@ function UserPage() {
       payload.confirm_password = confirmPassword;
     }
 
-    console.log(payload);
     try {
       await axios.put(
         "http://localhost:8000/api/users/update_profile",
@@ -112,7 +127,7 @@ function UserPage() {
         setShowChangePassword(false);
       }
 
-      setOriginalUser({ ...user });
+      setOriginalUser({ name: user.name, phone: user.phone, gender: user.gender, avatar_url: user.avatar_url });
     } catch (error: any) {
       const detail = error.response?.data?.detail;
       if (detail === "Current password is incorrect.") {
@@ -124,12 +139,45 @@ function UserPage() {
     }
   };
 
+  const handleAvatarUploaded = async (newUrl: string) => {
+    const token = localStorage.getItem('token');
+    console.log("AvatarUploader:", AvatarUploader)
+    if (!token || !user.id) {
+      console.error('Missing token or user ID');
+      return;
+    }
+    try {
+      await axios.put(`http://localhost:8000/api/users/${user.id}/avatar`,
+        { avatar_url: newUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // setUser({ ...user, avatar_url: newUrl });
+      setUser((prev) => ({
+        ...prev,
+        avatar_url: newUrl,
+      }));
+
+
+      // setOriginalUser({ ...originalUser, avatar_url: newUrl });
+      setOriginalUser((prevOriginal) => ({
+        ...prevOriginal,
+        avatar_url: newUrl,
+      }));
+    } catch (err) {
+      console.error('Update avatar failed:', err);
+      toast.warn('Update avatar failed. Please try again.');
+    }
+  };
   return (
     <div className={styles.container}>
       <aside className={styles.sidebar}>
         <div className={styles.userInfo}>
           <img
-            src={user.avatarUrl}
+            src={user.avatar_url?.trim() ? user.avatar_url : "/default-avatar.png"}
             alt="Avatar"
             className={styles.avatar}
           />
@@ -147,6 +195,11 @@ function UserPage() {
           <h2>User information</h2>
           {/* <button className={styles.btnDelete}>Xóa tài khoản</button> */}
         </div>
+        <AvatarUploader
+          initialAvatarUrl={user.avatar_url}
+          onAvatarUploaded={handleAvatarUploaded}
+        />
+
 
         {/* <div className={styles.avatarUpload}>
             <img
@@ -162,7 +215,6 @@ function UserPage() {
               </p>
             </div>
           </div> */}
-       {/* <AvatarUpload onUploadSuccess={handleAvatarUpload} /> */}
 
         <hr />
         <div className={styles.form}>
