@@ -78,6 +78,7 @@ const LoginPage: React.FC = () => {
               onChange={e => setPassword(e.target.value)}
             />
           </div>
+          <div className={styles.forgotPassword}> <Link to="/forgotpassword">Forgot password</Link></div>
           <button type="submit">Sign In</button>
         </form>
         {/* <div className={styles.alert_dange}>{message && <p>{message}</p>}</div> */}
