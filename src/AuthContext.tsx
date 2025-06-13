@@ -10,8 +10,8 @@ type AuthContextType = {
 // Default value chỉ để tránh lỗi, không ảnh hưởng thực tế nếu dùng Provider đúng cách
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
-  login: () => {},
-  logout: () => {},
+  login: () => { },
+  logout: () => { },
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return stored === 'true';
   });
 
-const login = () => {
+  const login = () => {
     console.log("AuthContext: login called");
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
@@ -29,6 +29,7 @@ const login = () => {
   const logout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
+    localStorage.setItem('isLoggedIn', 'false');
     console.log(isLoggedIn);
   };
 

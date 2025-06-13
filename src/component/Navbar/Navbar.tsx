@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import styles from './Navbar.module.css';
 import { AuthContext, useAuth } from '../../AuthContext';
+import AvatarUploader from '../Avatar/Avatar';
 
 function Navbar() {
     // const { isLoggedIn, login, logout } = useContext(AuthContext);
@@ -11,7 +12,7 @@ function Navbar() {
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        navigate('/');
     };
     const redirectLogin = () => {
         navigate('/login');
@@ -41,10 +42,9 @@ function Navbar() {
                     <FaSearch />
                 </button>
             </div>
+            {/* Avatar */}
 
-            {/* <div className={styles.right}>
-            <Link to="/login" className={styles.loginButton}>Sign in</Link>
-        </div> */}
+            
             <div>
                 {!isLoggedIn ? (
                     <button onClick={redirectLogin} className={styles.loginButton}>

@@ -141,7 +141,6 @@ function UserPage() {
 
   const handleAvatarUploaded = async (newUrl: string) => {
     const token = localStorage.getItem('token');
-    console.log("AvatarUploader:", AvatarUploader)
     if (!token || !user.id) {
       console.error('Missing token or user ID');
       return;

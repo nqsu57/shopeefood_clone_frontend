@@ -44,8 +44,6 @@ const LoginPage: React.FC = () => {
           },
         }
       );
-
-      // console.log("RES", response);
       const token = response.data.access_token;
       localStorage.setItem("token", token);
       console.log("Token login", token)
