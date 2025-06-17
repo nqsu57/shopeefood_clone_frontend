@@ -1,0 +1,24 @@
+.foodCard {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    background:#fff;
+
+}
+
+.foodCard img {
+    /* width: 100%;
+    height: 100%; */
+    object-fit: cover;
+    display: block;
+}
+
+.content {
+    padding: 10px;
+    text-align: center;
+}
+.title {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}

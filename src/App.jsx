@@ -34,7 +34,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/forgotpassword" element={<ForgotPassword/>} />
             <Route path="/resetpassword" element={<ResetPassword/>} />
-            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/" element={<Home />} />
             {/* Các route khác như About, Contact có thể thêm ở đây */}
           </Routes>
         </main>

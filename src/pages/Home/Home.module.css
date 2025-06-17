@@ -1,0 +1,12 @@
+.container {
+  display: grid;
+  max-width: 1200px;
+  margin: 0 auto; 
+  grid-template-columns: auto auto auto;
+  gap: 10px;
+  position: relative;
+}
+.listItem {
+  display: contents; 
+}
+
