@@ -7,8 +7,8 @@
 }
 
 .foodCard img {
-    /* width: 100%;
-    height: 100%; */
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     display: block;
 }
@@ -21,4 +21,46 @@
     margin: 0;
     font-size: 14px;
     color: #333;
+}
+
+
+/* Detail Card */
+.containerCard{
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    gap: 2rem;
+    background-color: #f3f3f3;
+    height: 1vh;
+}
+
+
+.detailLeft{
+    width: 480px;
+    height: 300px;
+
+}
+
+.detailLeft img{
+    width: 100%;
+    height: 100%;
+}
+
+.detailRight{
+    text-align: left;
+    /* margin-bottom: 60px; */
+    
+
+}
+.detailCard{
+    margin: 0;
+}
+
+.price{
+    background-color: #FA8966;
+    /* padding: 5px; */
+    color: #FFF2D7;
+    font-size: 30px;
+    font-weight: 500;
+  
 }

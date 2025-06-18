@@ -11,8 +11,9 @@ import Profile from './pages/User/UserPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './AuthContext';
-import ForgotPassword from './pages/Password/ForgotPassword'
-import ResetPassword from './pages/Password/ResetPassword'
+import ForgotPassword from './pages/Password/ForgotPassword';
+import ResetPassword from './pages/Password/ResetPassword';
+import FoodCardDetail from './component/FoodCard/FoodCardDetail';
 
 
 function App() {
@@ -34,7 +35,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/forgotpassword" element={<ForgotPassword/>} />
             <Route path="/resetpassword" element={<ResetPassword/>} />
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />} />        
+            <Route path="/food/:id" element={<FoodCardDetail/>} />
             {/* Các route khác như About, Contact có thể thêm ở đây */}
           </Routes>
         </main>

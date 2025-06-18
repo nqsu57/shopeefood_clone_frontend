@@ -3,6 +3,7 @@ import FoodCard from "../../component/FoodCard/FoodCard";
 import style from "./Home.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface Food {
   id: number;
@@ -19,12 +20,16 @@ function Home() {
       .then(res => setFoods(res.data))
       .catch(err => console.error("Failed to fetch foods:", err));
   }, []);
+
   return (
     <>
       <div className={style.container}>
         <div className={style.listItem}>
           {foods.map((food) => (
-            <FoodCard key={food.id} food={food} />
+            // <FoodCard key={food.id} food={food} />
+            <Link to={`/food/${food.id}`} key={food.id}>
+              <FoodCard food={food} />
+            </Link>
           ))}
         </div>
       </div>
