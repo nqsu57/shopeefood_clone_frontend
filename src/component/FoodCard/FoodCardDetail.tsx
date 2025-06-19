@@ -2,7 +2,9 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import style from './FoodCard.module.css'
-import { IoIosStar } from "react-icons/io";
+import { IoIosStar} from "react-icons/io";
+import { FaCartPlus } from "react-icons/fa";
+
 
 interface Restaurant {
     id: number;
@@ -196,13 +198,9 @@ function FoodCardDetail() {
 
 
                         <h2>Giá: {price.toLocaleString()}đ</h2>
-                        <div className={style.formCart}>
-                            <div className={style.addCart}>
-                                <button>Thêm vào giỏ hàng</button>
-                            </div>
-                            <div>
-                                <button>Mua ngay</button>
-                            </div>
+                        <div className={style.formCart}> 
+                            <button className={style.addCart}> <FaCartPlus /> Thêm vào giỏ hàng</button> 
+                            <button>Mua ngay</button>
                         </div>
                     </div>
 

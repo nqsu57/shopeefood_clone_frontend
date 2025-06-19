@@ -76,5 +76,8 @@
 
 .addCart{
     border: 1px solid #F05D40;
-    background-color: #FFF5F1;
+
+}
+.addCart button{
+    color: #F94D30!important;
 }
