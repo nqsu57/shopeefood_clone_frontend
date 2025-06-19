@@ -28,12 +28,10 @@
 .containerCard{
     display: flex;
     justify-content: center;
-    align-items: center;   
+    align-items: flex-start;   
     gap: 2rem;
     background-color: #f3f3f3;
-    height: 1vh;
 }
-
 
 .detailLeft{
     width: 480px;
@@ -62,5 +60,21 @@
     color: #FFF2D7;
     font-size: 30px;
     font-weight: 500;
+    margin: 5px;
   
+}
+
+.chooseOption{
+    display: column;
+    padding: 2px 0;
+    min-width: 100%;
+}
+
+.formCart{
+    display: flex;
+}
+
+.addCart{
+    border: 1px solid #F05D40;
+    background-color: #FFF5F1;
 }
