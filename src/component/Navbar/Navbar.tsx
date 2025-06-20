@@ -43,7 +43,7 @@ function Navbar() {
                 </button>
             </div>
             {/* Avatar */}
-
+            
             
             <div>
                 {!isLoggedIn ? (
