@@ -85,3 +85,8 @@
   cursor: pointer;
   font-size: 18px;
 } */
+
+.cartIcon {
+  cursor: pointer;
+  color: #ff4500;
+}

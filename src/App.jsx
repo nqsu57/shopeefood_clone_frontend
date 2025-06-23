@@ -14,9 +14,10 @@ import { AuthProvider } from './AuthContext';
 import ForgotPassword from './pages/Password/ForgotPassword';
 import ResetPassword from './pages/Password/ResetPassword';
 import FoodCardDetail from './component/FoodCard/FoodCardDetail';
-
+import CartDrawer from './pages/Cart/CartDrawer';
 
 function App() {
+  const [showCart, setShowCart] = useState(false);
   return (
     <>
       <ToastContainer
@@ -27,19 +28,26 @@ function App() {
         closeOnClick
         className="toast_container" />
       <AuthProvider>
-        <Navbar />
+        <Navbar onCartClick={() => setShowCart(true)} />
         <main className="p-4">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/forgotpassword" element={<ForgotPassword/>} />
-            <Route path="/resetpassword" element={<ResetPassword/>} />
-            <Route path="/" element={<Home />} />        
-            <Route path="/food/:id" element={<FoodCardDetail/>} />
-            {/* Các route khác như About, Contact có thể thêm ở đây */}
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/resetpassword" element={<ResetPassword />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/food/:id" element={<FoodCardDetail />} />
           </Routes>
         </main>
+
+
+        {/* Overlay mờ */}
+        {showCart && (
+          <div className="overlay" onClick={() => setShowCart(false)}></div>
+        )}
+
+        {showCart && <CartDrawer onClose={() => setShowCart(false)} />}
       </AuthProvider>
     </>
   );

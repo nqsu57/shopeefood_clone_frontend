@@ -4,8 +4,14 @@ import { FaSearch } from 'react-icons/fa';
 import styles from './Navbar.module.css';
 import { AuthContext, useAuth } from '../../AuthContext';
 import AvatarUploader from '../Avatar/Avatar';
+import { LuShoppingCart } from "react-icons/lu";
 
-function Navbar() {
+
+interface NavbarProps {
+    onCartClick: () => void;
+}
+
+function Navbar({ onCartClick }: NavbarProps) {
     // const { isLoggedIn, login, logout } = useContext(AuthContext);
     const { isLoggedIn, login, logout } = useAuth();
     const navigate = useNavigate();
@@ -42,9 +48,12 @@ function Navbar() {
                     <FaSearch />
                 </button>
             </div>
-            {/* Avatar */}
-            
-            
+
+            {/* Cart */}
+            <div className={styles.cartIcon} onClick={onCartClick}>
+                <LuShoppingCart size={28} />
+            </div>
+
             <div>
                 {!isLoggedIn ? (
                     <button onClick={redirectLogin} className={styles.loginButton}>
