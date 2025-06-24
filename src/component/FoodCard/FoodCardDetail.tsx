@@ -4,36 +4,7 @@ import axios from "axios";
 import style from './FoodCard.module.css'
 import { IoIosStar } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
-
-interface Restaurant {
-    id: number;
-    name: string;
-    address: string;
-}
-
-interface FoodSize {
-    id: number;
-    name: string;
-    price: number;
-}
-
-
-interface Food {
-    id: number;
-    name: string;
-    image: string;
-    description?: string;
-    restaurant: Restaurant;
-    price: number | null;
-    sizes: FoodSize[];
-    basePrice: number;
-    toppings: {
-        id: number;
-        name: string;
-        price: number;
-    }[];
-
-}
+import {Food, FoodSize, Topping } from '../../types/food';
 
 function FoodCardDetail() {
     const { id } = useParams<{ id: string }>();

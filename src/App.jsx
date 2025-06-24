@@ -42,12 +42,18 @@ function App() {
         </main>
 
 
-        {/* Overlay mờ */}
+        {/* Overlay mờ
         {showCart && (
           <div className="overlay" onClick={() => setShowCart(false)}></div>
         )}
 
-        {showCart && <CartDrawer onClose={() => setShowCart(false)} />}
+        {showCart && <CartDrawer onClose={() => setShowCart(false)} />} */}
+        {showCart && (
+          <>
+            <div className="overlay" onClick={() => setShowCart(false)} />
+            <CartDrawer isOpen={showCart} onClose={() => setShowCart(false)} />
+          </>
+        )}
       </AuthProvider>
     </>
   );
