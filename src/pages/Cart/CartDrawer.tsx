@@ -60,7 +60,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log("Cart API response:", data);
+        console.log("Cart API response:", data);
         setCartItems(data);
       })
       .catch((err) => console.error('Failed to load cart', err));
@@ -68,7 +68,6 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
 
   const handleRemove = (itemId: number) => {
     setCartItems(prev => prev.filter(item => item.id !== itemId));
-    // Gọi API xoá trên backend:
     fetch(`http://localhost:8000/api/cart/${itemId}`, {
       method: 'DELETE',
       headers: {
