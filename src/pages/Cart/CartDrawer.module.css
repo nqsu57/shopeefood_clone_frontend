@@ -101,18 +101,25 @@
   text-align: center;
 }
 
-/* 
-.slideIn {
-  transform: translateX(0%);
-}
 
-.slideOut {
-  transform: translateX(100%);
-}
-
-*/
 .footer {
   padding: 16px;
   border-top: 1px solid #ddd;
   font-weight: bold;
-} 
+  text-align: right;
+  font-size: 18px;
+  position: sticky;
+  bottom: 0;
+  background: white;
+}
+
+.quantityInput {
+  width: 30px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 0;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
