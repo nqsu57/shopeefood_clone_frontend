@@ -15,6 +15,7 @@ import ForgotPassword from './pages/Password/ForgotPassword';
 import ResetPassword from './pages/Password/ResetPassword';
 import FoodCardDetail from './component/FoodCard/FoodCardDetail';
 import CartDrawer from './pages/Cart/CartDrawer';
+import Order from './pages/Order/OrderPage';
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -38,6 +39,7 @@ function App() {
             <Route path="/resetpassword" element={<ResetPassword />} />
             <Route path="/" element={<Home />} />
             <Route path="/food/:id" element={<FoodCardDetail />} />
+            <Route path="/order" element={<Order />} />
           </Routes>
         </main>
 

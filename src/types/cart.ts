@@ -46,6 +46,6 @@ export interface CartItemOut {
     note?: string;
     food: FoodInfo;
     selected_size?: SizeInfo;
-    toppings_list?: ToppingInfo[];
+    toppings?: ToppingInfo[];
 }
 

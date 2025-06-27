@@ -103,7 +103,7 @@
 
 
 .footer {
-  padding: 16px;
+  /* padding: 16px; */
   border-top: 1px solid #ddd;
   font-weight: bold;
   text-align: right;
@@ -111,15 +111,36 @@
   position: sticky;
   bottom: 0;
   background: white;
+  padding: 0 16px;
+  border: none;
 }
 
+.contentFooter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.redirectOrder{
+  background-color: #EE4D2D;
+  width: 100%;
+  color: white;
+  padding: 8px 10px;
+}
 .quantityInput {
   width: 30px;
   text-align: center;
-  border: 1px solid #ddd;
   border-radius: 0;
+  border: none;
 }
 
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+
+.item_total_display p {
+  margin: 0;
+}
+
+.deleteItem{
+  cursor: pointer;
 }

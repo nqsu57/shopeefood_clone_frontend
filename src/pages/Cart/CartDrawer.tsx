@@ -3,6 +3,7 @@ import styles from './CartDrawer.module.css';
 import { CartItemOut } from "../../types/cart";
 import { IoClose } from "react-icons/io5";
 import { calculateTotalPrice } from '../../types/utils';
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -12,21 +13,31 @@ interface CartDrawerProps {
 const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const [cartItems, setCartItems] = useState<CartItemOut[]>([]);
 
+  const fetchCart = async () => {
+    const res = await fetch("http://localhost:8000/api/cart", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    const data = await res.json();
+    setCartItems(data);
+  };
   const updateQuantity = async (cartItemId: number, newQty: number) => {
-  await fetch(`http://localhost:8000/api/cart/${cartItemId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({ quantity: newQty }),
-  });
-};
+    await fetch(`http://localhost:8000/api/cart/${cartItemId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ quantity: newQty }),
+    });
+    fetchCart();
+  };
 
   const calculateItemTotal = (item: CartItemOut) => {
     const basePrice = (item.selected_size?.price ?? item.food.price) as number;
-    const toppingIds = item.toppings_list?.map(t => t.id) ?? [];
-    const toppings = item.toppings_list ?? [];
+    const toppingIds = item.toppings?.map(t => t.id) ?? [];
+    const toppings = item.toppings ?? [];
 
     return calculateTotalPrice(basePrice, toppingIds, toppings, item.quantity);
   };
@@ -91,7 +102,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <p>Giỏ hàng trống</p>
           ) : (
             cartItems.map((item) => {
-              const toppings = item.toppings_list ?? [];
+              const toppings = item.toppings ?? [];
               return (
                 <div key={item.id} className={styles.item}>
                   <div className={styles.quantityControl}>
@@ -135,9 +146,12 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                     <p>
                       {toppings.length > 0
                         ? toppings.map(t => t.name).join(", ")
-                        : "Không có"
+                        : ""
                       }
                     </p>
+                    {item.note && <p>📝 {item.note}</p>}
+
+
                   </div>
                   <div className={styles.basePrice}>
                     {item.quantity === 0 && (
@@ -148,11 +162,16 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                         Xoá
                       </button>
                     )}
-                    {calculateItemTotal(item) > 0 && (
-                      <p>
-                        {calculateItemTotal(item).toLocaleString()}₫
-                      </p>
-                    )}
+                    <div className={styles.item_total_display}>
+                      <RiDeleteBin6Line
+                        className={styles.deleteItem}
+                        onClick={() => handleRemove(item.id)} />
+                      {calculateItemTotal(item) > 0 && (
+                        <p>
+                          {calculateItemTotal(item).toLocaleString()}₫
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -160,9 +179,11 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           )}
         </div>
         <div className={styles.footer}>
-          <strong>
-            Tạm tính: {totalAmount.toLocaleString()}₫
-          </strong>
+          <div className={styles.contentFooter}>
+            <p>Tạm tính:</p>
+            <p>{totalAmount.toLocaleString()}₫</p>
+          </div>
+          <button className={styles.redirectOrder}>Đặt hàng</button>
         </div>
       </div>
     </>
