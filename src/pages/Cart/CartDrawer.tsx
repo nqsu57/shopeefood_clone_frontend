@@ -4,6 +4,8 @@ import { CartItemOut } from "../../types/cart";
 import { IoClose } from "react-icons/io5";
 import { calculateTotalPrice } from '../../types/utils';
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { Link } from 'react-router-dom';
+
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -122,14 +124,6 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       inputMode="numeric"
                       value={item.quantity}
                       onChange={(e) => handleQuantityInput(item, parseInt(e.target.value))}
-                      // onChange={(e) => {
-                      //   let value = e.target.value;
-                      //   if (value.startsWith('0') && value.length > 1) {
-                      //     // Loại bỏ ký tự '0' ở đầu
-                      //     value = value.replace(/^0+/, '');
-                      //   }
-                      //   handleQuantityInput(item, parseInt(value));
-                      // }}
                       className={styles.quantityInput}
                     />
 
@@ -183,7 +177,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <p>Tạm tính:</p>
             <p>{totalAmount.toLocaleString()}₫</p>
           </div>
-          <button className={styles.redirectOrder}>Đặt hàng</button>
+          <button className={styles.redirectOrder}><Link className={styles.redirectOrder} to='/order'>Đặt hàng</Link></button>
         </div>
       </div>
     </>
