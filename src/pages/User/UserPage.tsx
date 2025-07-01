@@ -4,6 +4,9 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AvatarUploader from "../../component/Avatar/Avatar";
+import { Link } from 'react-router-dom';
+import UserSidebar from '../../component/SideBar/Sidebar';
+
 
 function UserPage() {
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -26,7 +29,10 @@ function UserPage() {
     gender: "Default",
     avatar_url: "",
   });
-
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+  const toggleSubmenu = () => {
+    setIsSubmenuOpen(!isSubmenuOpen);
+  };
   useEffect(() => {
     if (!showChangePassword) {
       setNewPassword("");
@@ -58,7 +64,6 @@ function UserPage() {
         const email = data.email || "";
         const gender = data.gender || "Default";
         const avatar_url = data.avatar_url || "";
-        ;
         console.log(data.avatar_url);
         setUser({ id, name, phone, email, gender, avatar_url });
         setOriginalUser({ name, phone, gender, avatar_url });
@@ -173,7 +178,7 @@ function UserPage() {
   };
   return (
     <div className={styles.container}>
-      <aside className={styles.sidebar}>
+      {/* <aside className={styles.sidebar}>
         <div className={styles.userInfo}>
           <img
             src={user.avatar_url?.trim() ? user.avatar_url : "/default-avatar.png"}
@@ -183,12 +188,18 @@ function UserPage() {
           <h3>{user.name}</h3>
         </div>
         <ul className={styles.menu}>
-          <li className={styles.active}>Update account</li>
+          <li className={`${styles.menuItem} ${styles.active}`}
+            onClick={toggleSubmenu}>Update account</li>
+          {isSubmenuOpen && (
+            <ul className={styles.submenu}>
+              <li className={styles.submenuItem}><Link to="/account/address">Addresses</Link></li>
+            </ul>
+          )}
           <li>Order information</li>
           <li>Payment method</li>
         </ul>
-      </aside>
-
+      </aside> */}
+      <UserSidebar user={user} />
       <main className={styles.profile}>
         <div className={styles.profileHeader}>
           <h2>User information</h2>

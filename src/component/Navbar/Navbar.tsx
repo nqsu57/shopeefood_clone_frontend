@@ -67,7 +67,7 @@ function Navbar({ onCartClick }: NavbarProps) {
                 )}
             </div>
             <div className={styles.user}>
-                <Link to="/profile">Account</Link>
+                <Link to="/account/profile">Account</Link>
             </div>
         </nav>
     );

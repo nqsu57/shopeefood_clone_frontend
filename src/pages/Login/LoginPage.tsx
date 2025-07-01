@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
       console.log("Token login", token)
       login();
       setMessage("Login successful!");
-      navigate("/profile");
+      navigate("/account/profile");
     } catch (error) {
       console.error("Login error", error);
       toast.error("Email or password is incorrect");
