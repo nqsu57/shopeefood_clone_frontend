@@ -23,8 +23,15 @@ function AddressUserPage() {
 
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleAddAddress = async (data: { name: string; phone: string; address: string }) => {
+    const handleAddAddress = async (data: {
+        recipient_name: string;
+        phone_number: string;
+        address_line: string;
+        province_id: number;
+        district_id: number;
+        ward_id: number;
+        label: string;
+    }) => {
         const token = localStorage.getItem('token');
         try {
             const res = await axios.post(
@@ -32,12 +39,23 @@ function AddressUserPage() {
                 data,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setAddresses([...addresses, res.data]);
+
+            // Map data backend trả về sang format frontend hiển thị
+            const newAddress = {
+                id: res.data.id,
+                name: res.data.recipient_name,
+                phone: res.data.phone_number,
+                address: `${res.data.address_line}, ${res.data.ward.name}, ${res.data.district.name}, ${res.data.province.name}`,
+                is_default: res.data.is_default,
+            };
+
+            setAddresses([...addresses, newAddress]);
             setIsModalOpen(false);
         } catch (error) {
             console.error('Failed to add address', error);
         }
     };
+
 
     // Fetch user info
     useEffect(() => {
@@ -77,6 +95,7 @@ function AddressUserPage() {
                     },
                 });
                 setAddresses(res.data);
+                console.log("Data",res.data);
             } catch (error) {
                 console.error('Failed to fetch addresses', error);
             }

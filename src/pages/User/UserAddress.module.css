@@ -31,17 +31,20 @@
 
 .addressItem {
     border: 1px solid #ddd;
-    padding: 16px;
-    margin-top: 16px;
+    margin-top: 10px;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.defaultAddress {
-    border-color: #ee4d2d;
-}
 
 .info {
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
+    text-align: left;
+}
+.info p{
+    margin: 0;
 }
 
 .defaultBadge {
@@ -49,7 +52,6 @@
     color: white;
     padding: 2px 8px;
     border-radius: 12px;
-    margin-left: 8px;
     font-size: 12px;
 }
 
