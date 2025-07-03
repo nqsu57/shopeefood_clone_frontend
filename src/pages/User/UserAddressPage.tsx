@@ -3,16 +3,11 @@ import axios from 'axios';
 import UserSidebar from '../../component/SideBar/Sidebar';
 import styles from './UserAddress.module.css';
 import AddressModal from '../../component/Modals/AddAddressModal';
+import { Address } from '../../types/address';
 
-interface Address {
-    id: number;
-    name: string;
-    phone: string;
-    address: string;
-    is_default: boolean;
-}
 
 function AddressUserPage() {
+
     const [user, setUser] = useState({
         id: '',
         name: '',
@@ -23,7 +18,33 @@ function AddressUserPage() {
 
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleAddAddress = async (data: {
+    const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+
+    // const handleAddAddress = async (data: {
+    //     recipient_name: string;
+    //     phone_number: string;
+    //     address_line: string;
+    //     province_id: number;
+    //     district_id: number;
+    //     ward_id: number;
+    //     label: string;
+    // }) => {
+    //     const token = localStorage.getItem('token');
+    //     try {
+    //         const res = await axios.post(
+    //             'http://localhost:8000/api/address',
+    //             data,
+    //             { headers: { Authorization: `Bearer ${token}` } }
+    //         );
+
+    //         // Map data backend trả về sang format frontend hiển thị
+    //         setAddresses([...addresses, res.data]);
+    //         setIsModalOpen(false);
+    //     } catch (error) {
+    //         console.error('Failed to add address', error);
+    //     }
+    // };
+    const handleSaveAddress = async (data: {
         recipient_name: string;
         phone_number: string;
         address_line: string;
@@ -34,25 +55,33 @@ function AddressUserPage() {
     }) => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.post(
-                'http://localhost:8000/api/address',
-                data,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            if (editingAddress) {
+                // 👈 Nếu đang chỉnh sửa → PUT
+                const res = await axios.put<Address>(
+                    `http://localhost:8000/api/address/${editingAddress.id}`,
+                    data,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
 
-            // Map data backend trả về sang format frontend hiển thị
-            const newAddress = {
-                id: res.data.id,
-                name: res.data.recipient_name,
-                phone: res.data.phone_number,
-                address: `${res.data.address_line}, ${res.data.ward.name}, ${res.data.district.name}, ${res.data.province.name}`,
-                is_default: res.data.is_default,
-            };
+                const updated = addresses.map((addr) =>
+                    addr.id === editingAddress.id ? res.data : addr
+                );
+                setAddresses(updated);
+            } else {
+                // 👈 Nếu đang thêm mới → POST
+                const res = await axios.post<Address>(
+                    `http://localhost:8000/api/address`,
+                    data,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
 
-            setAddresses([...addresses, newAddress]);
+                setAddresses([...addresses, res.data]);
+            }
+
             setIsModalOpen(false);
+            setEditingAddress(null);
         } catch (error) {
-            console.error('Failed to add address', error);
+            console.error('Failed to save address', error);
         }
     };
 
@@ -94,8 +123,12 @@ function AddressUserPage() {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setAddresses(res.data);
-                console.log("Data",res.data);
+                // setAddresses(res.data);
+                // console.log("Data", res.data);
+                const sorted = res.data.sort((a: Address, b: Address) => {
+                    return (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0); // ✅ ép kiểu thành number
+                });
+                setAddresses(sorted);
             } catch (error) {
                 console.error('Failed to fetch addresses', error);
             }
@@ -134,6 +167,7 @@ function AddressUserPage() {
                 ...addr,
                 is_default: addr.id === id,
             }));
+            updated.sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
             setAddresses(updated);
         } catch (error) {
             console.error('Failed to set default address', error);
@@ -149,13 +183,30 @@ function AddressUserPage() {
                     <h2>My Addresses</h2>
                     <button
                         className={styles.addButton}
-                        onClick={() => setIsModalOpen(true)}>+ Add New Address</button>
+                        onClick={() => {
+                            setEditingAddress(null);
+                            setIsModalOpen(true);
+                        }}>+ Add New Address
+                    </button>
                 </div>
                 <AddressModal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onSave={handleAddAddress}
-                    title="Add New Address"
+                    onClose={() => { setIsModalOpen(false); setEditingAddress(null); }}
+                    onSave={handleSaveAddress}
+                    initialData={
+                        editingAddress
+                            ? {
+                                recipient_name: editingAddress.recipient_name,
+                                phone_number: editingAddress.phone_number,
+                                address_line: editingAddress.address_line,
+                                province_id: editingAddress.province.id,
+                                district_id: editingAddress.district.id,
+                                ward_id: editingAddress.ward.id,
+                                label: editingAddress.label,
+                            }
+                            : undefined
+                    }
+                    title={editingAddress ? 'Edit Address' : 'Add New Address'}
                 />
 
                 {addresses.length === 0 ? (
@@ -168,14 +219,21 @@ function AddressUserPage() {
                                 }`}
                         >
                             <div className={styles.info}>
-                                <strong>{addr.name}</strong> | {addr.phone}
-                                <p>{addr.address}</p>
+                                <strong>{addr.recipient_name}</strong> | {addr.phone_number}
+                                <p>
+                                    {addr.address_line}, {addr.ward.name}, {addr.district.name}, {addr.province.name}
+                                </p>
                                 {addr.is_default && (
                                     <span className={styles.defaultBadge}>Default</span>
                                 )}
                             </div>
                             <div className={styles.actions}>
-                                <button>Edit</button>
+                                <button onClick={() => {
+                                    setEditingAddress(addr);
+                                    setIsModalOpen(true);
+                                }}>
+                                    Edit
+                                </button>
                                 <button onClick={() => handleDelete(addr.id)}>Delete</button>
                                 {!addr.is_default && (
                                     <button onClick={() => handleSetDefault(addr.id)}>

@@ -6,6 +6,11 @@ import { Province, District, Ward } from "../types/address";
 const API_BASE = "http://localhost:8000/api";
 
 interface ProvinceDistrictWardSelectorProps {
+    value?: {
+        province_id: number | null;
+        district_id: number | null;
+        ward_id: number | null;
+    };
     onChange: (
         province: Province | null,
         district: District | null,
@@ -13,7 +18,9 @@ interface ProvinceDistrictWardSelectorProps {
     ) => void;
 }
 
+
 const ProvinceDistrictWardSelector = ({
+    value,
     onChange,
 }: ProvinceDistrictWardSelectorProps) => {
     const [provinces, setProvinces] = useState<Province[]>([]);

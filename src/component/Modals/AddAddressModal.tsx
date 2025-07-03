@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './AddressModal.module.css';
 import AddressSelection from '../ProvinceDistrictWardSelector';
-import { Province, District, Ward } from '../../types/address'
+import { Province, District, Ward, Address } from '../../types/address'
 
 
 interface AddressModalProps {
@@ -28,6 +28,7 @@ interface AddressModalProps {
     };
     title: string;
 }
+
 
 
 function AddressModal({
@@ -67,8 +68,6 @@ function AddressModal({
             alert('Please fill all fields');
             return;
         }
-
-
         onSave({
             recipient_name: name,
             phone_number: phone,
@@ -91,7 +90,7 @@ function AddressModal({
     return (
         <div className={styles.overlay}>
             <div className={styles.modal}>
-                <h2>New Address</h2>
+                <h2>{title}</h2>
                 <div className={styles.formGroup}>
                     <div className={styles.inputGroup}>
                         <input
