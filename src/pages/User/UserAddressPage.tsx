@@ -55,6 +55,7 @@ function AddressUserPage() {
         axios.get('http://localhost:8000/api/provinces')
             .then(res => setProvinces(res.data));
     }, []);
+
     const handleSaveAddress = async (data: {
         recipient_name: string;
         phone_number: string;
@@ -63,6 +64,8 @@ function AddressUserPage() {
         district_id: number;
         ward_id: number;
         label: string;
+        is_default: boolean;
+
     }) => {
         const token = localStorage.getItem('token');
         try {
