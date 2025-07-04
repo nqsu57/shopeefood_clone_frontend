@@ -3,8 +3,15 @@ import axios from 'axios';
 import UserSidebar from '../../component/SideBar/Sidebar';
 import styles from './UserAddress.module.css';
 import AddressModal from '../../component/Modals/AddAddressModal';
-import { Address } from '../../types/address';
+import { Province, District, Ward, Address } from '../../types/address';
 
+type EditingAddress = Address & {
+    province_id: number;
+    district_id: number;
+    ward_id: number;
+    districts: District[];
+    wards: Ward[];
+};
 
 function AddressUserPage() {
 
@@ -15,11 +22,10 @@ function AddressUserPage() {
         email: '',
         avatar_url: '',
     });
-
+    const [provinces, setProvinces] = useState<Province[]>([]);
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-
+    const [editingAddress, setEditingAddress] = useState<EditingAddress | null>(null);
     // const handleAddAddress = async (data: {
     //     recipient_name: string;
     //     phone_number: string;
@@ -44,6 +50,11 @@ function AddressUserPage() {
     //         console.error('Failed to add address', error);
     //     }
     // };
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/provinces')
+            .then(res => setProvinces(res.data));
+    }, []);
     const handleSaveAddress = async (data: {
         recipient_name: string;
         phone_number: string;
@@ -56,7 +67,6 @@ function AddressUserPage() {
         const token = localStorage.getItem('token');
         try {
             if (editingAddress) {
-                // 👈 Nếu đang chỉnh sửa → PUT
                 const res = await axios.put<Address>(
                     `http://localhost:8000/api/address/${editingAddress.id}`,
                     data,
@@ -68,7 +78,6 @@ function AddressUserPage() {
                 );
                 setAddresses(updated);
             } else {
-                // 👈 Nếu đang thêm mới → POST
                 const res = await axios.post<Address>(
                     `http://localhost:8000/api/address`,
                     data,
@@ -84,7 +93,30 @@ function AddressUserPage() {
             console.error('Failed to save address', error);
         }
     };
+    const handleEdit = async (addr: Address) => {
+        const token = localStorage.getItem('token');
 
+        const districtsRes = await axios.get(
+            `http://localhost:8000/api/provinces/${addr.province.id}/districts`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const wardsRes = await axios.get(
+            `http://localhost:8000/api/districts/${addr.district.id}/wards`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setEditingAddress({
+            ...addr,
+            province_id: addr.province.id,
+            district_id: addr.district.id,
+            ward_id: addr.ward.id,
+            districts: districtsRes.data,
+            wards: wardsRes.data,
+        });
+
+        setIsModalOpen(true);
+    };
 
     // Fetch user info
     useEffect(() => {
@@ -189,6 +221,25 @@ function AddressUserPage() {
                         }}>+ Add New Address
                     </button>
                 </div>
+                {/* <AddressModal
+                    isOpen={isModalOpen}
+                    onClose={() => { setIsModalOpen(false); setEditingAddress(null); }}
+                    onSave={handleSaveAddress}
+                    initialData={
+                        editingAddress
+                            ? {
+                                recipient_name: editingAddress.recipient_name,
+                                phone_number: editingAddress.phone_number,
+                                address_line: editingAddress.address_line,
+                                province_id: editingAddress.province.id,
+                                district_id: editingAddress.district.id,
+                                ward_id: editingAddress.ward.id,
+                                label: editingAddress.label,
+                            }
+                            : undefined
+                    }
+                    title={editingAddress ? 'Edit Address' : 'Add New Address'}
+                /> */}
                 <AddressModal
                     isOpen={isModalOpen}
                     onClose={() => { setIsModalOpen(false); setEditingAddress(null); }}
@@ -206,6 +257,9 @@ function AddressUserPage() {
                             }
                             : undefined
                     }
+                    provinces={provinces}
+                    districts={editingAddress?.districts || []}
+                    wards={editingAddress?.wards || []}
                     title={editingAddress ? 'Edit Address' : 'Add New Address'}
                 />
 
@@ -228,10 +282,7 @@ function AddressUserPage() {
                                 )}
                             </div>
                             <div className={styles.actions}>
-                                <button onClick={() => {
-                                    setEditingAddress(addr);
-                                    setIsModalOpen(true);
-                                }}>
+                                <button onClick={() => handleEdit(addr)}>
                                     Edit
                                 </button>
                                 <button onClick={() => handleDelete(addr.id)}>Delete</button>

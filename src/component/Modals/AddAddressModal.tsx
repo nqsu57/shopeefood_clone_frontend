@@ -16,6 +16,7 @@ interface AddressModalProps {
         district_id: number;
         ward_id: number;
         label: string;
+        is_default: boolean;
     }) => void;
     initialData?: {
         recipient_name: string;
@@ -25,11 +26,13 @@ interface AddressModalProps {
         district_id: number;
         ward_id: number;
         label?: string;
+        is_default?: boolean;
     };
     title: string;
+    provinces: Province[];
+    districts: District[];
+    wards: Ward[];
 }
-
-
 
 function AddressModal({
     isOpen,
@@ -37,6 +40,9 @@ function AddressModal({
     onSave,
     initialData,
     title,
+    provinces,
+    districts,
+    wards
 }: AddressModalProps) {
     const [name, setName] = useState(initialData?.recipient_name || '');
     const [phone, setPhone] = useState(initialData?.phone_number || '');
@@ -46,19 +52,31 @@ function AddressModal({
     const [wardId, setWardId] = useState<number | null>(initialData?.ward_id || null);
     const tags = ['Home', 'Work', 'Other'];
     const [selectedTag, setSelectedTag] = useState(initialData?.label || 'Home');
+    const [isDefault, setIsDefault] = useState(false);
 
     useEffect(() => {
-        if (initialData) {
-            setName(initialData.recipient_name);
-            setPhone(initialData.phone_number);
-            setAddress(initialData.address_line);
-            setProvinceId(initialData.province_id);
-            setDistrictId(initialData.district_id);
-            setWardId(initialData.ward_id);
-            setSelectedTag(initialData.label || 'Home');
+        if (isOpen) {
+            if (initialData) {
+                setName(initialData.recipient_name);
+                setPhone(initialData.phone_number);
+                setAddress(initialData.address_line);
+                setProvinceId(initialData.province_id);
+                setDistrictId(initialData.district_id);
+                setWardId(initialData.ward_id);
+                setSelectedTag(initialData.label || 'Home');
+                setIsDefault(initialData.is_default || false);
+            } else {
+                setName('');
+                setPhone('');
+                setAddress('');
+                setProvinceId(null);
+                setDistrictId(null);
+                setWardId(null);
+                setSelectedTag('Home');
+                setIsDefault(false);
+            }
         }
-    }, [initialData]);
-
+    }, [isOpen, initialData]);
 
     if (!isOpen) return null;
 
@@ -76,14 +94,16 @@ function AddressModal({
             district_id: districtId,
             ward_id: wardId,
             label: selectedTag,
+            is_default: isDefault,
+
         });
-        setName('');
-        setPhone('');
-        setAddress('');
-        setProvinceId(null);
-        setDistrictId(null);
-        setWardId(null);
-        setSelectedTag('Home');
+        // setName('');
+        // setPhone('');
+        // setAddress('');
+        // setProvinceId(null);
+        // setDistrictId(null);
+        // setWardId(null);
+        // setSelectedTag('Home');
 
     };
 
@@ -112,6 +132,11 @@ function AddressModal({
                 <div className={styles.addressSelection}>
 
                     <AddressSelection
+                        value={{
+                            province_id: provinceId,
+                            district_id: districtId,
+                            ward_id: wardId,
+                        }}
                         onChange={(
                             province: Province | null,
                             district: District | null,
@@ -121,6 +146,9 @@ function AddressModal({
                             setDistrictId(district?.id || null);
                             setWardId(ward?.id || null);
                         }}
+                        provinces={provinces}
+                        districts={districts}
+                        wards={wards}
                     />
                     <textarea
                         value={address}
@@ -140,6 +168,14 @@ function AddressModal({
                             {tag}
                         </span>
                     ))}
+                </div>
+                <div className={styles.setDefault}>
+                    <input
+                        type="checkbox"
+                        checked={isDefault}
+                        onChange={(e) => setIsDefault(e.target.checked)}
+                    />
+                    <label>Set as Default Address</label>
                 </div>
 
                 <div className={styles.actions}>
