@@ -5,12 +5,29 @@ import styles from './OrderPage.module.css';
 import { CiLocationOn } from "react-icons/ci";
 import { CartItemOut } from "../../types/cart";
 
+interface Address {
+    id: number;
+    recipient_name: string;
+    phone_number: string;
+    address_line: string;
+    label?: string;
+    is_default: boolean;
+    province: { id: number; name: string };
+    district: { id: number; name: string };
+    ward: { id: number; name: string };
+}
+
 interface User {
     id: number;
     name: string;
     phone: string;
     email: string;
+    gender: string;
+    avatar_url?: string;
+    default_address?: Address;
 }
+
+
 
 function OrderPage() {
     const [user, setUser] = useState<User | null>(null);
@@ -58,34 +75,34 @@ function OrderPage() {
             .catch(err => console.error("Failed to fetch cart", err));
     }, []);
     const handlePlaceOrder = async () => {
-    try {
-        const payload = {
-            items: cartItems.map(item => ({
-                cart_item_id: item.id
-            })),
-            payment_method: paymentMethod,
-            shipping_fee: shippingFee,
-            note: ""
-        };
+        try {
+            const payload = {
+                items: cartItems.map(item => ({
+                    cart_item_id: item.id
+                })),
+                payment_method: paymentMethod,
+                shipping_fee: shippingFee,
+                note: ""
+            };
 
-        const res = await axios.post(
-            "http://localhost:8000/api/order",
-            payload,
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
+            const res = await axios.post(
+                "http://localhost:8000/api/order",
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 }
-            }
-        );
+            );
 
-        alert("Đặt hàng thành công!");
-        // Sau khi đặt hàng có thể redirect về trang home hoặc profile
-        window.location.href = "/";
-    } catch (error) {
-        console.error("Đặt hàng thất bại", error);
-        alert("Đặt hàng thất bại. Vui lòng thử lại.");
-    }
-};
+            alert("Đặt hàng thành công!");
+            // Sau khi đặt hàng có thể redirect về trang home hoặc profile
+            window.location.href = "/";
+        } catch (error) {
+            console.error("Đặt hàng thất bại", error);
+            alert("Đặt hàng thất bại. Vui lòng thử lại.");
+        }
+    };
 
 
     return (
@@ -96,11 +113,21 @@ function OrderPage() {
                         <CiLocationOn />
                         <h2>Địa chỉ nhận hàng</h2>
                     </div>
-                    <div className={styles.addressInfo}>
+                    <div >
                         {user ? (
                             <div>
-                                <span>{user.name}</span>
-                                <span>{user.phone}</span>
+                                {user?.default_address ? (
+                                    <div className={styles.addressInfo}>
+                                        <span>{user.default_address.recipient_name}</span>
+                                        <span>{user.default_address.phone_number}</span>
+                                        <span>
+                                            {user.default_address.address_line}, {user.default_address.ward.name}, {user.default_address.district.name}, {user.default_address.province.name}
+                                        </span>
+                                        <span className={styles.defaultBadge}>Default</span>
+                                    </div>
+                                ) : (
+                                    <p>Vui lòng chọn địa chỉ giao hàng</p>
+                                )}
                             </div>
                         ) : (
                             <p>Vui lòng đăng nhập</p>
@@ -197,12 +224,12 @@ function OrderPage() {
                 </div>
                 <div className={styles.orderSection}>
                     <p>
-                        Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo 
+                        Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo
                         <a href='https://shopeefood.vn/terms-of-service'>
-                             Điều khoản ShopeeFood
+                            Điều khoản ShopeeFood
                         </a>
                     </p>
-                    <button className={styles.orderButton}  onClick={handlePlaceOrder}>
+                    <button className={styles.orderButton} onClick={handlePlaceOrder}>
                         Đặt hàng
                     </button>
                 </div>

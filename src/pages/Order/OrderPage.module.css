@@ -23,17 +23,26 @@
     margin-left: 5px;
 }
 
-.addressInfo {
+.addressInfo{
     display: flex;
     width: fit-content;
-    justify-content: space-between;
+    /* max-width: 600px; */
+    /* justify-content: space-between ; */
     text-align: center;
-
+}
+.addressInfo span{
+    margin: 0 20px;
 }
 
-.addressInfo span {
-    margin-right: 20px;
+.defaultBadge {
+    padding: 2px 8px;
+    font-size: 14px;
+    color: white;
+    background-color: #ff5722;
+    border-radius: 2px;
+    display: inline-block;
 }
+
 
 /* CSS product */
 .productSection {

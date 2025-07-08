@@ -77,9 +77,13 @@ function AddressUserPage() {
                 );
 
                 const updated = addresses.map((addr) =>
-                    addr.id === editingAddress.id ? res.data : addr
+                    addr.id === editingAddress.id
+                        ? res.data
+                        : res.data.is_default ? { ...addr, is_default: false } : addr
                 );
-                setAddresses(updated);
+                setAddresses(
+                    [...updated].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0))
+                );
             } else {
                 const res = await axios.post<Address>(
                     `http://localhost:8000/api/address`,
@@ -87,7 +91,12 @@ function AddressUserPage() {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
 
-                setAddresses([...addresses, res.data]);
+                const updated = addresses
+                    .map((addr) => res.data.is_default ? { ...addr, is_default: false } : addr)
+                    .concat(res.data);
+                setAddresses(
+                    [...updated].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0))
+                );
             }
 
             setIsModalOpen(false);
@@ -217,32 +226,14 @@ function AddressUserPage() {
                 <div className={styles.header}>
                     <h2>My Addresses</h2>
                     <button
-                        className={styles.addButton}
+                        className={`${styles.addButton} ${addresses.length >= 10 ? styles.disabledBtn : ""}`}
                         onClick={() => {
                             setEditingAddress(null);
                             setIsModalOpen(true);
-                        }}>+ Add New Address
+                        }}
+                        disabled={addresses.length >= 10}>+ Add New Address
                     </button>
                 </div>
-                {/* <AddressModal
-                    isOpen={isModalOpen}
-                    onClose={() => { setIsModalOpen(false); setEditingAddress(null); }}
-                    onSave={handleSaveAddress}
-                    initialData={
-                        editingAddress
-                            ? {
-                                recipient_name: editingAddress.recipient_name,
-                                phone_number: editingAddress.phone_number,
-                                address_line: editingAddress.address_line,
-                                province_id: editingAddress.province.id,
-                                district_id: editingAddress.district.id,
-                                ward_id: editingAddress.ward.id,
-                                label: editingAddress.label,
-                            }
-                            : undefined
-                    }
-                    title={editingAddress ? 'Edit Address' : 'Add New Address'}
-                /> */}
                 <AddressModal
                     isOpen={isModalOpen}
                     onClose={() => { setIsModalOpen(false); setEditingAddress(null); }}
@@ -270,29 +261,66 @@ function AddressUserPage() {
                     <p>No addresses found.</p>
                 ) : (
                     addresses.map((addr) => (
+                        // <div
+                        //     key={addr.id}
+                        //     className={`${styles.addressItem} ${addr.is_default ? styles.defaultAddress : ''
+                        //         }`}
+                        // >
+                        //     <div className={styles.info}>
+                        //         <strong>{addr.recipient_name}</strong> | {addr.phone_number}
+                        //         <p>
+                        //             {addr.address_line}, {addr.ward.name}, {addr.district.name}, {addr.province.name}
+                        //         </p>
+                        //         {addr.is_default && (
+                        //             <span className={styles.defaultBadge}>Default</span>
+                        //         )}
+                        //     </div>
+                        //     <div className={styles.actions}>
+                        //         <button onClick={() => handleEdit(addr)}>
+                        //             Edit
+                        //         </button>
+                        //         <button
+                        //             onClick={() => handleDelete(addr.id)}
+                        //             disabled={addr.is_default}
+                        //             className={addr.is_default ? styles.disabledBtn : ""}
+                        //            >
+                        //             Delete
+                        //         </button>
+                        //         {!addr.is_default && (
+                        //             <button onClick={() => handleSetDefault(addr.id)}>
+                        //                 Set as default
+                        //             </button>
+                        //         )}
+                        //     </div>
+                        // </div>
                         <div
                             key={addr.id}
-                            className={`${styles.addressItem} ${addr.is_default ? styles.defaultAddress : ''
-                                }`}
+                            className={`${styles.addressItem} ${addr.is_default ? styles.defaultAddress : ''}`}
                         >
                             <div className={styles.info}>
-                                <strong>{addr.recipient_name}</strong> | {addr.phone_number}
-                                <p>
+                                <div className={styles.headerInfo}>
+                                    <span className={styles.recipient}>
+                                        <strong>{addr.recipient_name}</strong> | {addr.phone_number}
+                                    </span>
+                                    {addr.is_default && (
+                                        <span className={styles.defaultBadge}>Default</span>
+                                    )}
+                                </div>
+                                <p className={styles.addressDetails}>
                                     {addr.address_line}, {addr.ward.name}, {addr.district.name}, {addr.province.name}
                                 </p>
-                                {addr.is_default && (
-                                    <span className={styles.defaultBadge}>Default</span>
-                                )}
                             </div>
                             <div className={styles.actions}>
-                                <button onClick={() => handleEdit(addr)}>
-                                    Edit
+                                <button onClick={() => handleEdit(addr)}>Edit</button>
+                                <button
+                                    onClick={() => handleDelete(addr.id)}
+                                    disabled={addr.is_default}
+                                    className={addr.is_default ? styles.disabledBtn : ''}
+                                >
+                                    Delete
                                 </button>
-                                <button onClick={() => handleDelete(addr.id)}>Delete</button>
                                 {!addr.is_default && (
-                                    <button onClick={() => handleSetDefault(addr.id)}>
-                                        Set as default
-                                    </button>
+                                    <button onClick={() => handleSetDefault(addr.id)}>Set as default</button>
                                 )}
                             </div>
                         </div>
