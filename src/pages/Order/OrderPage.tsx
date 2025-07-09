@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import styles from './OrderPage.module.css';
 import { CiLocationOn } from "react-icons/ci";
 import { CartItemOut } from "../../types/cart";
+import AddressListModal from '../../component/Modals/AddressList/AddressListModal';
+
 
 interface Address {
     id: number;
@@ -34,6 +36,8 @@ function OrderPage() {
     const [cartItems, setCartItems] = useState<CartItemOut[]>([]);
     const [paymentMethod, setPaymentMethod] = useState<string>('COD');
     const shippingFee = 25000;
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [currentAddress, setCurrentAddress] = useState<Address | null>(null);
 
     const calculateItemTotal = (item: CartItemOut) => {
         const toppingTotal = item.toppings?.reduce((sum, t) => sum + t.price, 0) || 0;
@@ -55,6 +59,8 @@ function OrderPage() {
         })
             .then(res => {
                 setUser(res.data);
+                setCurrentAddress(res.data.default_address);
+                console.log('default', res.data.default_address);
             })
             .catch(err => {
                 console.error("Lỗi lấy thông tin user", err);
@@ -113,7 +119,7 @@ function OrderPage() {
                         <CiLocationOn />
                         <h2>Địa chỉ nhận hàng</h2>
                     </div>
-                    <div >
+                    {/* <div >
                         {user ? (
                             <div>
                                 {user?.default_address ? (
@@ -124,13 +130,31 @@ function OrderPage() {
                                             {user.default_address.address_line}, {user.default_address.ward.name}, {user.default_address.district.name}, {user.default_address.province.name}
                                         </span>
                                         <span className={styles.defaultBadge}>Default</span>
+                                        <button onClick={() => setShowAddressModal(true)} className={styles.changeBtn}>Change</button>
+
                                     </div>
                                 ) : (
                                     <p>Vui lòng chọn địa chỉ giao hàng</p>
                                 )}
+
                             </div>
                         ) : (
                             <p>Vui lòng đăng nhập</p>
+                        )}
+                    </div> */}
+                    <div>
+                        {currentAddress ? (
+                            <div className={styles.addressInfo}>
+                                <span>{currentAddress.recipient_name}</span>
+                                <span>{currentAddress.phone_number}</span>
+                                <span>
+                                    {currentAddress.address_line}, {currentAddress.ward.name}, {currentAddress.district.name}, {currentAddress.province.name}
+                                </span>
+                                {currentAddress.is_default && <span className={styles.defaultBadge}>Default</span>}
+                                <button onClick={() => setShowAddressModal(true)} className={styles.changeBtn}>Change</button>
+                            </div>
+                        ) : (
+                            <p>Vui lòng chọn địa chỉ giao hàng</p>
                         )}
                     </div>
                 </div>
@@ -234,6 +258,16 @@ function OrderPage() {
                     </button>
                 </div>
             </div>
+            {showAddressModal && (
+                <AddressListModal
+                    currentAddressId={currentAddress?.id || null}
+                    onClose={() => setShowAddressModal(false)}
+                    onConfirm={(addr) => {
+                        setCurrentAddress(addr);
+                        setShowAddressModal(false);
+                    }}
+                />
+            )}
         </>
     );
 };

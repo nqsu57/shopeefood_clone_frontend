@@ -26,6 +26,7 @@ function AddressUserPage() {
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<EditingAddress | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
     // const handleAddAddress = async (data: {
     //     recipient_name: string;
     //     phone_number: string;
@@ -57,6 +58,7 @@ function AddressUserPage() {
     }, []);
 
     const handleSaveAddress = async (data: {
+
         recipient_name: string;
         phone_number: string;
         address_line: string;
@@ -68,6 +70,11 @@ function AddressUserPage() {
 
     }) => {
         const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Bạn chưa đăng nhập!');
+            return;
+        }
+        setIsSaving(true);
         try {
             if (editingAddress) {
                 const res = await axios.put<Address>(

@@ -80,13 +80,23 @@ function AddressModal({
 
     if (!isOpen) return null;
 
-    const handleSubmit = () => {
-        console.log(name, phone, address, provinceId, districtId, wardId, selectedTag);
+    const handleSubmit = async () => {
+        // console.log(name, phone, address, provinceId, districtId, wardId, selectedTag);
         if (!name || !phone || !address || !provinceId || !districtId || !wardId) {
             alert('Please fill all fields');
             return;
         }
-        onSave({
+        // onSave({
+        //     recipient_name: name,
+        //     phone_number: phone,
+        //     address_line: address,
+        //     province_id: provinceId,
+        //     district_id: districtId,
+        //     ward_id: wardId,
+        //     label: selectedTag,
+        //     is_default: isDefault,
+        // });
+        const payload = {
             recipient_name: name,
             phone_number: phone,
             address_line: address,
@@ -95,15 +105,18 @@ function AddressModal({
             ward_id: wardId,
             label: selectedTag,
             is_default: isDefault,
+        };
+        try {
+            console.log("🔥 typeof onSave:", typeof onSave);
+            console.log("🔥 onSave === handleSaveAddress ?", onSave.name);
+            const updated = await onSave(payload);
+            console.log('Address updated:', updated);
+            onClose();
+        } catch (err) {
+            console.error('Failed to save address', err);
+            alert('Failed to save address. Please try again.');
+        }
 
-        });
-        // setName('');
-        // setPhone('');
-        // setAddress('');
-        // setProvinceId(null);
-        // setDistrictId(null);
-        // setWardId(null);
-        // setSelectedTag('Home');
 
     };
 
