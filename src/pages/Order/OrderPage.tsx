@@ -5,30 +5,7 @@ import styles from './OrderPage.module.css';
 import { CiLocationOn } from "react-icons/ci";
 import { CartItemOut } from "../../types/cart";
 import AddressListModal from '../../component/Modals/AddressList/AddressListModal';
-
-
-interface Address {
-    id: number;
-    recipient_name: string;
-    phone_number: string;
-    address_line: string;
-    label?: string;
-    is_default: boolean;
-    province: { id: number; name: string };
-    district: { id: number; name: string };
-    ward: { id: number; name: string };
-}
-
-interface User {
-    id: number;
-    name: string;
-    phone: string;
-    email: string;
-    gender: string;
-    avatar_url?: string;
-    default_address?: Address;
-}
-
+import {User, Address} from '../../types/user';
 
 
 function OrderPage() {

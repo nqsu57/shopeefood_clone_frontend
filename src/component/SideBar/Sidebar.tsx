@@ -52,7 +52,9 @@ function UserSidebar({ user }: { user: any }) {
                     </ul>
                 )}
 
-                <li className={styles.menuItem}>Order information</li>
+                <li className={styles.menuItem} onClick={() => {
+                                navigate('/account/myorder');
+                            }}>Order information</li>
                 <li className={styles.menuItem}>Payment method</li>
             </ul>
         </aside>

@@ -15,6 +15,7 @@ import ForgotPassword from './pages/Password/ForgotPassword';
 import ResetPassword from './pages/Password/ResetPassword';
 import FoodCardDetail from './component/FoodCard/FoodCardDetail';
 import CartDrawer from './pages/Cart/CartDrawer';
+import MyOrders from './pages/Order/MyOrder';
 import Order from './pages/Order/OrderPage';
 import Address from './pages/User/UserAddressPage';
 
@@ -37,6 +38,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/account/profile" element={<Profile />} />
+            <Route path="/account/myorder" element={<MyOrders />} />
+
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
             <Route path="/" element={<Home />} />
