@@ -1,0 +1,56 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.contact,
+.appLinks,
+.company,
+.address {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.contact{
+    text-align: left;
+}
+
+.address{
+    text-align: right;
+}
+
+.contact ul {
+    list-style: none;
+    padding: 0;
+}
+
+.contact ul li {
+    margin-bottom: 10px;
+}
+
+.appLinks div {
+    display: grid;
+    gap: 10px;
+}
+
+.appLinks img {
+    height: 40px;
+    width: 150px;
+}
+
+.company img {
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.social a {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.certification img {
+    height: 50px;
+}

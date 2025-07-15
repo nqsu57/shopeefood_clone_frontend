@@ -8,6 +8,7 @@ import { AuthProvider } from './AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Navbar from './component/Navbar/Navbar';
+import Footer from './component/Footer/Footer';
 import LoginPage from './pages/Login/LoginPage'; // Default import
 import Signup from './pages/register/RegisterPage';
 import Profile from './pages/User/UserPage';
@@ -55,6 +56,8 @@ function App() {
             <CartDrawer isOpen={showCart} onClose={() => setShowCart(false)} />
           </>
         )}
+        <Footer onCartClick={() => setShowCart(true)} />
+
       </AuthProvider>
     </>
   );
