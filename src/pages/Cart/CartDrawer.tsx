@@ -14,6 +14,8 @@ interface CartDrawerProps {
 
 const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const [cartItems, setCartItems] = useState<CartItemOut[]>([]);
+  const [clearCartConfirm, setClearCartConfirm] = useState<boolean>(false); // State for confirming clear cart
+
 
   const fetchCart = async () => {
     const res = await fetch("http://localhost:8000/api/cart", {
@@ -24,6 +26,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     const data = await res.json();
     setCartItems(data);
   };
+
+
   const updateQuantity = async (cartItemId: number, newQty: number) => {
     await fetch(`http://localhost:8000/api/cart/${cartItemId}`, {
       method: "PATCH",
@@ -87,6 +91,25 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+  };
+
+  // Check if the cart contains items from multiple restaurants
+  // const checkMultipleRestaurants = () => {
+    // const restaurantIds = new Set(cartItems.map(item => item.food.restaurant_id));
+    // return restaurantIds.size > 1;
+  // };
+
+  // Handle cart clear confirmation
+  const handleClearCart = async () => {
+    // Send a request to backend to clear the cart
+    await fetch(`http://localhost:8000/api/cart/confirm-clear`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    setClearCartConfirm(false); // Close confirmation modal
+    fetchCart(); // Re-fetch the cart after clearing
   };
   return (
     <>
@@ -180,6 +203,13 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           <button className={styles.redirectOrder}><Link className={styles.redirectOrder} to='/order'>Đặt hàng</Link></button>
         </div>
       </div>
+      {clearCartConfirm && (
+        <div className={styles.confirmModal}>
+          <h3>Giỏ hàng chứa món ăn từ nhiều nhà hàng. Bạn có chắc chắn muốn xóa giỏ hàng?</h3>
+          <button onClick={handleClearCart}>Xóa giỏ hàng</button>
+          <button onClick={() => setClearCartConfirm(false)}>Hủy</button>
+        </div>
+      )}
     </>
   );
 };
