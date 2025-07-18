@@ -47,7 +47,6 @@ function Footer() {
                 <p>Công ty Cổ Phần Foody</p>
                 <p>Lầu 6, Tòa nhà FPT, số 244 đường Cống Quỳnh, phường Phạm Ngũ Lão, Quận 1, TP.HCM</p>
                 <p>Giấy CNĐKKD số 031282036 do Sở Kế hoạch và Đầu tư TP.HCM cấp ngày 11/02/2012</p>
-                <p>sửa đổi lần thứ 23, ngày 10/12/2020</p>
                 <p>Chủ tịch hội đồng quản trị: Nguyễn Hải Đăng</p>
                 <p>Hotline: 028 7109 6879 | cskh@support.shopeefood.vn</p>
                 <div className={styles.certification}>
