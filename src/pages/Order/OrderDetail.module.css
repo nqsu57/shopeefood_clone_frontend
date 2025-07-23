@@ -1,0 +1,103 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.container > :first-child {
+    flex: 0 0 250px; /* Sidebar cố định */
+}
+
+.mainContent {
+    flex: 1;
+    max-width: 900px;
+    padding: 60px 0 0 0;
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    color: #999;
+    padding: 8px;
+    border-bottom: 2px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.step.active {
+    color: #4caf50;
+    font-weight: bold;
+    border-bottom: 2px solid #4caf50;
+}
+
+.content {
+    display: flex;
+    gap: 20px;
+}
+
+.infoBox,
+.detailsBox {
+    flex: 1;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fafafa;
+    text-align: left;
+}
+
+.infoSection {
+    margin-bottom: 20px;
+}
+
+.itemRow {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.itemImage {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.priceSection {
+    font-size: 14px;
+}
+
+.priceSection p {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+}
+
+.priceSection hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.backButton {
+    margin-top: 20px;
+    padding: 8px 12px;
+    background: #eee;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    float: left;
+}
+
+.backButton:hover {
+    background: #ddd;
+}

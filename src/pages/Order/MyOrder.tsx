@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import UserSidebar from '../../component/SideBar/Sidebar';
+import { AiOutlineShop } from "react-icons/ai";
 import styles from './MyOrders.module.css';
+import { useNavigate } from 'react-router-dom';
 
-type Order = {
-    orderId: number;
-    restaurant: string;
+type OrderItem = {
     foodName: string;
     image: string;
-    size: string;
-    toppings: string[];
+    size?: string;
+    toppings?: string[];
     quantity: number;
-    total: number;
+    price: number; // thêm price cho từng món
+};
+
+type Order = {
+    orderID: string;
+    restaurant: string;
+    createdAt: string;
     status: string;
-    createdAt: string; // Giả định backend trả về field này
+    total: number;
+    items: OrderItem[];
 };
 
 type User = {
@@ -31,12 +39,42 @@ const tabs = [
     { label: "Trả hàng/Hoàn tiền", value: "Return Refund" },
 ];
 
+const groupOrders = (rawData: any[]): Order[] => {
+    const map = new Map<number, Order>();
+
+    rawData.forEach(item => {
+        if (!map.has(item.orderID)) {
+            map.set(item.orderID, {
+                orderID: item.orderID,
+                restaurant: item.restaurant,
+                createdAt: item.createdAt,
+                status: item.status,
+                total: item.total,
+                items: []
+            });
+        }
+
+        map.get(item.orderID)!.items.push({
+            foodName: item.foodName,
+            image: item.image,
+            size: item.size,
+            toppings: item.toppings,
+            quantity: item.quantity,
+            price: item.price
+        });
+    });
+
+    return Array.from(map.values());
+};
+
 function MyOrder() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<string>("All");
+    const [activeTab, setActiveTab] = useState("All");
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -46,14 +84,12 @@ function MyOrder() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setUser(res.data);
-            } catch (error) {
+            } catch {
                 setError('Không thể tải thông tin người dùng.');
-                console.error('Failed to fetch user info', error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchUserInfo();
     }, []);
 
@@ -63,16 +99,13 @@ function MyOrder() {
                 try {
                     const token = localStorage.getItem("token");
                     const query = activeTab !== "All" ? `?status=${encodeURIComponent(activeTab)}` : "";
-
-                    const response = await axios.get(`http://localhost:8000/orders${query}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+                    const response = await axios.get(`http://localhost:8000/api/my-orders${query}`, {
+                        headers: { Authorization: `Bearer ${token}` }
                     });
-
+                    // const grouped = groupOrders(response.data);
                     setOrders(response.data);
-                } catch (err) {
-                    console.error("Không thể tải đơn hàng:", err);
+                    console.log("Data từ API:", response.data);
+                } catch {
                     setError("Không thể tải danh sách đơn hàng.");
                 }
             };
@@ -85,46 +118,80 @@ function MyOrder() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Đơn hàng của tôi</h1>
-
-            <div className={styles.tabs}>
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.value}
-                        onClick={() => setActiveTab(tab.value)}
-                        className={activeTab === tab.value ? styles.activeTab : styles.tab}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
-            </div>
-
-            {orders.length === 0 ? (
-                <p className={styles.noOrders}>Không có đơn hàng nào.</p>
-            ) : (
-                orders.map((order) => (
-                    <div key={order.orderId} className={styles.orderCard}>
-                        <div className={styles.header}>
-                            <span>{order.restaurant} | #{order.orderId}</span>
-                            <span>{new Date(order.createdAt).toLocaleString('vi-VN')}</span>
+            <UserSidebar user={user} />
+            <div className={styles.mainContent}>
+              <div className={styles.tabsContainer}>
+                        <div className={styles.tabs}>
+                            {tabs.map(tab => (
+                                <button
+                                    key={tab.value}
+                                    onClick={() => setActiveTab(tab.value)}
+                                    className={activeTab === tab.value ? styles.activeTab : styles.tab}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
                         </div>
-                        <div className={styles.content}>
-                            <div className={styles.image}>
-                                <img src={order.image} alt="Food" />
-                            </div>
-                            <div className={styles.details}>
-                                <p><strong>Tên món ăn:</strong> {order.foodName}</p>
-                                <p><strong>- Size:</strong> {order.size}</p>
-                                <p><strong>- Topping:</strong> {order.toppings.join(', ')}</p>
-                                <p><strong>- Số lượng:</strong> {order.quantity}</p>
-                                <p><strong>Tổng:</strong> {order.total.toLocaleString()}đ</p>
-                                <p><strong>Trạng thái:</strong> <span className={styles.status}>● {order.status}</span></p>
-                            </div>
-                        </div>
-                        <button className={styles.createButton}>Tạo lại đơn hàng</button>
                     </div>
-                ))
-            )}
+
+                {orders.length === 0 ? (
+                    <p className={styles.noOrders}>Không có đơn hàng nào.</p>
+                ) : (
+                    orders.map(order => (
+                        <div key={order.orderID} className={styles.orderCard}>
+                            <div className={styles.header}>
+                                <span> <AiOutlineShop className={styles.iconShop} />{order.restaurant} | #{order.orderID}</span>
+                                <div className={styles.headerRight}>
+                                    <span className={styles.status}>{order.status}</span>
+                                    <span>{new Date(order.createdAt).toLocaleString('vi-VN')}</span>
+                                </div>
+
+                            </div>
+
+                            {order.items.length === 0 ? (
+                                <p className={styles.noOrders}>Đơn hàng chưa có món nào.</p>
+                            ) : (
+                                <div className={styles.content}>
+                                    {order.items.map((item, idx) => (
+                                        <div key={idx} className={styles.contentRow}>
+                                            <div className={styles.contentLeft}>
+                                                <div className={styles.image}>
+                                                    <img
+                                                        src={item.image || ""}
+                                                        alt={item.foodName || ""}
+                                                    />
+                                                </div>
+                                                <div className={styles.details}>
+                                                    <p><strong>{item.foodName || ""}</strong></p>
+                                                    {item.size && <p><strong>- Size:</strong> {item.size}</p>}
+                                                    {item.toppings && item.toppings.length > 0 && (
+                                                        <p><strong>- Topping:</strong> {item.toppings.join(', ')}</p>
+                                                    )}
+                                                    <p><strong>- Số lượng:</strong> {item.quantity}</p>
+                                                    <p><strong>- Giá:</strong> {(item.price ?? 0).toLocaleString()}đ</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className={styles.footer}>
+                                <button className={styles.detailButton}
+                                  onClick={() => navigate(`/order/${order.orderID}`)} >Xem chi tiết</button>
+                                <div className={styles.totalBlock}>
+                                    <p>
+                                        <strong>Thành tiền:</strong>
+                                        <span>{(order.total ?? 0).toLocaleString()}₫</span>
+                                    </p>
+                                </div>
+
+                            
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
     );
 }

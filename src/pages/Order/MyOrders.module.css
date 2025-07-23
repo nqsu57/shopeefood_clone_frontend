@@ -1,28 +1,63 @@
 .container {
-    padding: 20px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
 }
+
 
 .title {
     font-size: 24px;
     font-weight: bold;
 }
 
+.mainContent {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 100px;
+    margin-right: 20px;
+    margin-left: 0;
+    position: relative; /* Cung cấp context cho sticky */
+}
+
+.tabsContainer {
+    position: sticky;
+    top: 0; /* Cố định ở đầu trang */
+    background-color: #fff;
+    z-index: 100;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Đảm bảo tabs chiếm toàn bộ chiều rộng */
+}
+
 .tabs {
     display: flex;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
 }
 
 .tab {
-    background-color: #eee;
+    background-color: #f5f5f5;
     border: none;
     padding: 8px 16px;
     cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: background-color 0.3s;
 }
 
 .activeTab {
     background-color: #ff5722;
     color: white;
+    border-radius: 4px;
 }
 
 .orderCard {
@@ -35,11 +70,24 @@
     display: flex;
     justify-content: space-between;
     font-weight: bold;
+    align-items: center;
 }
 
-.content {
+.iconShop {
+    vertical-align: middle;
+    font-size: 20px;
+    margin: 0 3px 3px 0;
+}
+
+
+.contentRow {
     display: flex;
+    justify-content: space-between;
     margin-top: 12px;
+}
+
+.contentLeft {
+    display: flex;
 }
 
 .image img {
@@ -50,19 +98,39 @@
 
 .details {
     margin-left: 16px;
+    text-align: left;
+}
+
+.contentRight {
+    text-align: right;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.totalBlock,
+.stateBlock {
+    background: #f9f9f9;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .status {
-    color: green;
-}
-
-.createButton {
-    margin-top: 12px;
-    background-color: #2196f3;
+    background-color: #ff5722;
     color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
+    margin: 0 4px;
+    padding: 2px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
 }
 
 .loading,
@@ -70,4 +138,50 @@
 .noOrders {
     margin: 20px 0;
     color: gray;
+}
+
+.footer {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    border-top: 1px solid #eee;
+}
+
+
+.detailButton {
+    background-color: #FE5723;
+    color: white;
+    border: none;
+    /* padding: 6px 12px; */
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 12px 6px;
+    padding: 12px;
+}
+
+.totalBlock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+.totalBlock p {
+    margin: 0;
+    font-size: 18px;
+}
+
+.totalBlock strong {
+    color: #000;
+    margin-right: 5px;
+}
+
+.totalBlock p span {
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 22px;
+
 }

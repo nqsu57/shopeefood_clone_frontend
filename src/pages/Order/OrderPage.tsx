@@ -5,7 +5,7 @@ import styles from './OrderPage.module.css';
 import { CiLocationOn } from "react-icons/ci";
 import { CartItemOut } from "../../types/cart";
 import AddressListModal from '../../component/Modals/AddressList/AddressListModal';
-import {User, Address} from '../../types/user';
+import { User, Address } from '../../types/user';
 
 
 function OrderPage() {
@@ -57,7 +57,13 @@ function OrderPage() {
             })
             .catch(err => console.error("Failed to fetch cart", err));
     }, []);
+
     const handlePlaceOrder = async () => {
+        if (!currentAddress) {
+            alert("Vui lòng chọn địa chỉ giao hàng!");
+            return;
+        }
+
         try {
             const payload = {
                 items: cartItems.map(item => ({
@@ -65,8 +71,11 @@ function OrderPage() {
                 })),
                 payment_method: paymentMethod,
                 shipping_fee: shippingFee,
-                note: ""
+                note: "",
+                address_id: currentAddress.id
             };
+
+            console.log("Payload gửi:", payload);
 
             const res = await axios.post(
                 "http://localhost:8000/api/order",
@@ -86,6 +95,7 @@ function OrderPage() {
             alert("Đặt hàng thất bại. Vui lòng thử lại.");
         }
     };
+
 
 
     return (

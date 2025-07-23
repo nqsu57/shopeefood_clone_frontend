@@ -19,6 +19,7 @@ import CartDrawer from './pages/Cart/CartDrawer';
 import MyOrders from './pages/Order/MyOrder';
 import Order from './pages/Order/OrderPage';
 import Address from './pages/User/UserAddressPage';
+import OrderDetail from './pages/Order/OrderDetailPage';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
             <Route path="/food/:id" element={<FoodCardDetail />} />
             <Route path="/order" element={<Order />} />
             <Route path="/account/address" element={<Address />} />
+            <Route path="/order/:id" element={<OrderDetail />} />
           </Routes>
         </main>
 
