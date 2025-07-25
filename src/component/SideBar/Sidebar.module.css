@@ -91,6 +91,10 @@
 }
 
 
+.submenuItem {
+    padding-left: 20px;
+    cursor: pointer;
+}
 
 
 /* .active {

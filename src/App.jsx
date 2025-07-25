@@ -4,7 +4,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { ToastContainer } from 'react-toastify';
-import { AuthProvider } from './AuthContext';
+import { AuthProvider, useAuth } from './AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Navbar from './component/Navbar/Navbar';
@@ -20,10 +20,18 @@ import MyOrders from './pages/Order/MyOrder';
 import Order from './pages/Order/OrderPage';
 import Address from './pages/User/UserAddressPage';
 import OrderDetail from './pages/Order/OrderDetailPage';
+import SearchPage from './component/Search/SearchPage';
 
 
 function App() {
   const [showCart, setShowCart] = useState(false);
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div>Đang tải thông tin người dùng...</div>; 
+  }
+
+
   return (
     <>
       <ToastContainer
@@ -33,7 +41,7 @@ function App() {
         newestOnTop={false}
         closeOnClick
         className="toast_container" />
-      <AuthProvider>
+      {/* <AuthProvider> */}
         <Navbar onCartClick={() => setShowCart(true)} />
         <main className="p-4">
           <Routes>
@@ -41,7 +49,6 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/account/profile" element={<Profile />} />
             <Route path="/account/myorder" element={<MyOrders />} />
-
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
             <Route path="/" element={<Home />} />
@@ -49,6 +56,7 @@ function App() {
             <Route path="/order" element={<Order />} />
             <Route path="/account/address" element={<Address />} />
             <Route path="/order/:id" element={<OrderDetail />} />
+            <Route path="/search" element={<SearchPage />} />
           </Routes>
         </main>
 
@@ -60,7 +68,7 @@ function App() {
         )}
         <Footer onCartClick={() => setShowCart(true)} />
 
-      </AuthProvider>
+      {/* </AuthProvider> */}
     </>
   );
 }

@@ -123,7 +123,7 @@ function FoodCardDetail() {
         const basePrice = selectedSize ? selectedSize.price : food?.price ?? 0;
         const total = calculateTotalPrice(basePrice, selectedToppings, newQty);
         setPrice(total);
-    };    
+    };
 
     const fetchCart = async () => {
         setIsLoadingCart(true);
@@ -234,24 +234,17 @@ function FoodCardDetail() {
             if (existingRestaurant) {
                 existingRestaurantId = existingRestaurant.id;
                 existingRestaurantName = existingRestaurant.name;
-            } else {
-                console.log("Failed to fetch existing restaurant, using null ID");
             }
         }
 
-        console.log("Existing Restaurant ID:", existingRestaurantId);
-        console.log("New Restaurant ID:", newRestaurantId);
-        console.log("Cart Items:", cartItems);
-
         if (existingRestaurantId && existingRestaurantId !== newRestaurantId && !clearCart) {
-            console.log("Conflict detected, showing modal"); // Debug
             setCartConflict({
                 existing_restaurant: { id: existingRestaurantId, name: existingRestaurantName },
                 new_restaurant: { id: newRestaurantId, name: food.restaurant.name },
             });
             setShowClearCartModal(true);
             setIsAdding(false);
-            return; // Ngăn không gọi addToCart khi có xung đột
+            return;
         }
 
         const data = {
@@ -266,8 +259,10 @@ function FoodCardDetail() {
             const result = await addToCart(data);
             if (result.status === 200 && result.data) {
                 toast.success("Thêm vào giỏ hàng thành công!");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); 
             } else if (result.status === 409) {
-                // Modal should already be shown, no action needed here
             }
         } catch (err: any) {
             toast.error(err.message || "Có lỗi xảy ra khi thêm vào giỏ hàng.");
@@ -276,6 +271,7 @@ function FoodCardDetail() {
             setIsAdding(false);
         }
     };
+
 
     const handleClearCartConfirm = async () => {
         setShowClearCartModal(false);
@@ -372,7 +368,7 @@ function FoodCardDetail() {
                             >
                                 <FaCartPlus /> {isAdding ? "Đang thêm..." : "Thêm vào giỏ hàng"}
                             </button>
-                            <button className={style.order}>Mua ngay</button>
+                            {/* <button className={style.order}>Mua ngay</button> */}
                         </div>
                     </div>
                 </div>

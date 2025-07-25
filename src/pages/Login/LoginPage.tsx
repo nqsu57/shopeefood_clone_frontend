@@ -6,7 +6,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../AuthContext';
 
-
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,37 +24,44 @@ const LoginPage: React.FC = () => {
     return true;
   }
   toast.dismiss();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isValid = checkInvalid();
-    if (!isValid) {
-      return;
-    }
+    if (!checkInvalid()) return;
+
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/login",
+        'http://localhost:8000/api/login',
         new URLSearchParams({
           username: email,
           password: password,
         }),
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
         }
       );
+
       const token = response.data.access_token;
-      localStorage.setItem("token", token);
-      console.log("Token login", token)
-      login();
-      setMessage("Login successful!");
-      navigate("/account/profile");
-    } catch (error) {
-      console.error("Login error", error);
-      toast.error("Email or password is incorrect");
-      setMessage("Email or password is incorrect");
+      localStorage.setItem('token', token);
+
+
+      const userRes = await axios.get('http://localhost:8000/api/get_user', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // 👉 Lưu vào AuthContext
+      login(userRes.data);
+      navigate('/');
+    } catch (err) {
+      console.error('Login error', err);
+      toast.error("Sai email hoặc mật khẩu");
     }
   };
+
 
   return (
     <>
@@ -89,7 +95,7 @@ const LoginPage: React.FC = () => {
         newestOnTop={false}
         closeOnClick
         autoClose={3000}
-        limit={2}  />
+        limit={2} />
 
     </>
   );

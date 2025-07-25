@@ -22,7 +22,7 @@ export interface Food {
     image: string;
     description?: string;
     restaurant: Restaurant;
-    price: number | null;
+    price: number;
     sizes: FoodSize[];
     basePrice: number;
     toppings: Topping[];

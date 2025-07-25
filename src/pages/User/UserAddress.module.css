@@ -1,6 +1,7 @@
 .container {
     display: flex;
     justify-content: center;
+    padding-bottom: 60px; 
 }
 
 .address {
@@ -15,6 +16,7 @@
     margin-right: 20px;
     margin-left: 0;
     margin-right: 0;
+    margin-bottom: 80px;
 }
 
 .header {

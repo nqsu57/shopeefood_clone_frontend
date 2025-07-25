@@ -6,6 +6,7 @@ import { CiLocationOn } from "react-icons/ci";
 import { CartItemOut } from "../../types/cart";
 import AddressListModal from '../../component/Modals/AddressList/AddressListModal';
 import { User, Address } from '../../types/user';
+import { toast } from 'react-toastify';
 
 
 function OrderPage() {
@@ -60,7 +61,7 @@ function OrderPage() {
 
     const handlePlaceOrder = async () => {
         if (!currentAddress) {
-            alert("Vui lòng chọn địa chỉ giao hàng!");
+            toast.warning("Vui lòng chọn địa chỉ giao hàng!");
             return;
         }
 
@@ -87,12 +88,14 @@ function OrderPage() {
                 }
             );
 
-            alert("Đặt hàng thành công!");
+            toast.success("Đặt hàng thành công!");
             // Sau khi đặt hàng có thể redirect về trang home hoặc profile
-            window.location.href = "/";
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 2000);
         } catch (error) {
             console.error("Đặt hàng thất bại", error);
-            alert("Đặt hàng thất bại. Vui lòng thử lại.");
+            toast.error("Đặt hàng thất bại. Vui lòng thử lại.");
         }
     };
 

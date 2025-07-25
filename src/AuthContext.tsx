@@ -1,44 +1,89 @@
-// src/contexts/AuthContext.js
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+// src/contexts/AuthContext.tsx
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import axios from 'axios';
 
-type AuthContextType = {
+export interface UserType {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  avatar_url: string;
+  gender: string;
+  default_address?: any;
+}
+
+interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  user: UserType | null;
+  login: (user: UserType) => void;
   logout: () => void;
-};
+  isLoading: boolean; //  thêm isLoading để hỗ trợ trạng thái chờ
+}
 
-// Default value chỉ để tránh lỗi, không ảnh hưởng thực tế nếu dùng Provider đúng cách
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
+  user: null,
   login: () => { },
   logout: () => { },
+  isLoading: true,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const stored = localStorage.getItem('isLoggedIn');
-    return stored === 'true';
+    const token = localStorage.getItem('token');
+    return !!token;
   });
+  const [user, setUser] = useState<UserType | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // khởi tạo loading
 
-  const login = () => {
-    console.log("AuthContext: login called");
+  const login = (userData: UserType) => {
     setIsLoggedIn(true);
-    localStorage.setItem('isLoggedIn', 'true');
+    setUser(userData);
+    setIsLoading(false);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
-    localStorage.setItem('isLoggedIn', 'false');
-    console.log(isLoggedIn);
+    setUser(null);
+    setIsLoading(false);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    axios.get('http://localhost:8000/api/get_user', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(" User từ API:", res.data);
+        setUser(res.data);
+
+        setIsLoggedIn(true);
+      })
+      .catch((err) => {
+        console.error('Lỗi khi lấy user:', err);
+        setUser(null);
+        setIsLoggedIn(false);
+        localStorage.removeItem('token');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
-export default AuthContext;

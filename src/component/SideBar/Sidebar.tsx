@@ -3,13 +3,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
 
-
 function UserSidebar({ user }: { user: any }) {
     const location = useLocation();
-    const isActive = (path: string) => location.pathname === path;
-    const [activeMenu, setActiveMenu] = useState<'profile' | 'addresses'>('profile');
-    const [isSubmenuOpen, setIsSubmenuOpen] = useState(true); 
     const navigate = useNavigate();
+    const isActive = (path: string) => location.pathname === path;
+    const [isSubmenuOpen, setIsSubmenuOpen] = useState(true);
+    const isAccountSection = location.pathname.startsWith('/account/profile') || location.pathname.startsWith('/account/address');
+
 
     return (
         <aside className={styles.sidebar}>
@@ -24,7 +24,7 @@ function UserSidebar({ user }: { user: any }) {
 
             <ul className={styles.menu}>
                 <li
-                    className={`${styles.menuItem} ${isSubmenuOpen ? styles.active : ''}`}
+                    className={`${styles.menuItem} ${isAccountSection ? styles.active : ''}`}
                     onClick={() => setIsSubmenuOpen(!isSubmenuOpen)}
                 >
                     Update account
@@ -33,32 +33,32 @@ function UserSidebar({ user }: { user: any }) {
                 {isSubmenuOpen && (
                     <ul className={styles.submenu}>
                         <li
-                            className={`${styles.submenuItem} ${activeMenu === 'profile' ? styles.active : ''}`}
-                            onClick={() => {setActiveMenu('profile');
-                            navigate('/account/profile');}
-                                }
+                            className={`${styles.submenuItem} ${isActive('/account/profile') ? styles.active : ''}`}
+                            onClick={() => navigate('/account/profile')}
                         >
                             Profile
                         </li>
                         <li
-                            className={`${styles.submenuItem} ${activeMenu === 'addresses' ? styles.active : ''}`}
-                            onClick={() => {
-                                setActiveMenu('addresses');
-                                navigate('/account/address');
-                            }}
+                            className={`${styles.submenuItem} ${isActive('/account/address') ? styles.active : ''}`}
+                            onClick={() => navigate('/account/address')}
                         >
                             Addresses
                         </li>
                     </ul>
                 )}
 
-                <li className={styles.menuItem} onClick={() => {
-                                navigate('/account/myorder');
-                            }}>Order information</li>
-                <li className={styles.menuItem}>Payment method</li>
+                <li
+                    className={`${styles.menuItem} ${isActive('/account/myorder') ? styles.active : ''}`}
+                    onClick={() => navigate('/account/myorder')}
+                >
+                    Order information
+                </li>
+
+                <li className={styles.menuItem}>
+                    Payment method
+                </li>
             </ul>
         </aside>
-
     );
 }
 

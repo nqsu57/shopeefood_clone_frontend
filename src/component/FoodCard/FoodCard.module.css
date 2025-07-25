@@ -3,7 +3,8 @@
     border-radius: 5px;
     overflow: hidden;
     background: #fff;
-
+    /* cursor: pointer;
+    transition: transform 0.2s; */
 }
 
 .foodCard img {
@@ -12,6 +13,11 @@
     object-fit: cover;
     display: block;
 }
+
+.foodCard:hover {
+    transform: scale(1.02);
+}
+
 
 .content {
     padding: 10px;

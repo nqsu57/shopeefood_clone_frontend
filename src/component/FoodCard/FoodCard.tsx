@@ -1,4 +1,5 @@
 import style from './FoodCard.module.css'
+import { Link } from 'react-router-dom';
 
 interface Food {
   id: number;
@@ -8,14 +9,15 @@ interface Food {
 }
 
 const FoodCard = ({ food }: { food: Food }) => (
-  <div className={style.foodCard}>
-    <img src={food.image} alt={food.name} />
-    <div className={style.content}>
-      <h3 className={style.title}>{food.name}</h3>
-      <p>{food.price.toLocaleString()} VND</p>
+  <Link to={`/food/${food.id}`}>
+    <div className={style.foodCard}>
+      <img src={food.image} alt={food.name} />
+      <div className={style.content}>
+        <h3 className={style.title}>{food.name}</h3>
+        <p>{food.price.toLocaleString()} VND</p>
+      </div>
     </div>
-
-  </div>
+  </Link>
 );
 
 export default FoodCard;
