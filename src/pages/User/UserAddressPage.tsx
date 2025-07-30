@@ -4,6 +4,7 @@ import UserSidebar from '../../component/SideBar/Sidebar';
 import styles from './UserAddress.module.css';
 import AddressModal from '../../component/Modals/AddAddressModal';
 import { Province, District, Ward, Address } from '../../types/address';
+import { toast } from 'react-toastify';
 
 type EditingAddress = Address & {
     province_id: number;
@@ -71,7 +72,7 @@ function AddressUserPage() {
     }) => {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert('Bạn chưa đăng nhập!');
+            toast.error('You are not logged in!');
             return;
         }
         setIsSaving(true);
@@ -110,6 +111,7 @@ function AddressUserPage() {
             setEditingAddress(null);
         } catch (error) {
             console.error('Failed to save address', error);
+            toast.error('Failed to save address');
         }
     };
     const handleEdit = async (addr: Address) => {
@@ -199,6 +201,7 @@ function AddressUserPage() {
             setAddresses(addresses.filter((addr) => addr.id !== id));
         } catch (error) {
             console.error('Failed to delete address', error);
+            toast.error('Failed to delete address');
         }
     };
 

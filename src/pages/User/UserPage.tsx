@@ -41,9 +41,6 @@ function UserPage() {
     }
   }, [showChangePassword]);
 
-  // useEffect(() => {
-  //   console.log("Avatar updated → user.avatar_url:", user.avatar_url);
-  // }, [user.avatar_url]);
   useEffect(() => {
     const fetchUserInfo = async () => {
       const token = localStorage.getItem("token");
@@ -165,7 +162,6 @@ function UserPage() {
         avatar_url: newUrl,
       }));
 
-
       // setOriginalUser({ ...originalUser, avatar_url: newUrl });
       setOriginalUser((prevOriginal) => ({
         ...prevOriginal,
@@ -178,27 +174,6 @@ function UserPage() {
   };
   return (
     <div className={styles.container}>
-      {/* <aside className={styles.sidebar}>
-        <div className={styles.userInfo}>
-          <img
-            src={user.avatar_url?.trim() ? user.avatar_url : "/default-avatar.png"}
-            alt="Avatar"
-            className={styles.avatar}
-          />
-          <h3>{user.name}</h3>
-        </div>
-        <ul className={styles.menu}>
-          <li className={`${styles.menuItem} ${styles.active}`}
-            onClick={toggleSubmenu}>Update account</li>
-          {isSubmenuOpen && (
-            <ul className={styles.submenu}>
-              <li className={styles.submenuItem}><Link to="/account/address">Addresses</Link></li>
-            </ul>
-          )}
-          <li>Order information</li>
-          <li>Payment method</li>
-        </ul>
-      </aside> */}
       <UserSidebar user={user} />
       <main className={styles.profile}>
         <div className={styles.profileHeader}>
@@ -209,22 +184,6 @@ function UserPage() {
           initialAvatarUrl={user.avatar_url}
           onAvatarUploaded={handleAvatarUploaded}
         />
-
-
-        {/* <div className={styles.avatarUpload}>
-            <img
-              src=""
-              alt="Avatar"
-              className={styles.avatarPreview}
-            />
-            <div className={styles.uploadArea}>
-              <input type="file"/>
-              <button className={styles.btn}>Update</button>
-              <p className={styles.note}>
-                Accepts GIF, JPEG, PNG, BMP with a maximum size of 5.0 MB
-              </p>
-            </div>
-          </div> */}
 
         <hr />
         <div className={styles.form}>

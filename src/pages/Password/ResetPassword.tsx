@@ -1,55 +1,80 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import style from './Password.module.css'
+import styles from './ResetPassword.module.css' 
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-export default function ResetPasswordForm() {
-  const [params] = useSearchParams();
-  const token = params.get("token");
-  const [newPassword, setNewPassword] = useState("");
+
+function ResetPasswordPage() {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!token) {
-      setError("Token missing.");
+      toast.error("The link is invalid.");
       return;
     }
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+
+    if (password !== confirmPassword) {
+      toast.error("The password does not match.");
       return;
     }
 
     try {
-      await axios.post("http://localhost:8000/api/reset-password", {
+      setLoading(true);
+      const response = await axios.post("http://localhost:8000/api/auth/reset-password", {
         token,
-        new_password: newPassword,
+        new_password: password,
       });
-      setMessage("Your password has been reset successfully.");
-    } catch (err) {
-      setError("Invalid or expired token.");
+      toast.success("Password reset successful!");
+      navigate('/login');
+
+
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "An error has occurred.");
+    } finally {
+      setLoading(false);
     }
   };
-  return (
-    <>
-    <div className={style.container}>
-      <div className={style.content}>
-        <h2>Change password</h2>
-        <span>Enter new password</span>
-      </div>
-      {message ? (
-        <p>{message}</p>) : (
-        <form onSubmit={handleSubmit}>
-          <div className={style.changePassword}>
-            <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-            <input type="password" placeholder="Confirm new password" value={confirmPassword} onChange={(e) => setNewPassword(e.target.value)} />
-          </div>
-          <button type="submit" className={style.btnSend}>Reset Password</button>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-        </form>
-      )}
-      </div>
-    </>
+
+   return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>Reset Password</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>New password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Confirm password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            className={styles.input}
+          />
+        </div>
+        <button type="submit" disabled={loading} className={styles.button}>
+          {loading ? " Processing... " : "Confirm password change"}
+        </button>
+      </form>
+    </div>
   );
-}
+};
+
+export default ResetPasswordPage;

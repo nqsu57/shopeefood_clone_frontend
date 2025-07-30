@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, redirect, useNavigate } from "react-router-dom";
 import styles from './Login.module.css';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../AuthContext';
+import { FaPhone } from 'react-icons/fa';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +13,11 @@ const LoginPage: React.FC = () => {
   const [message, setMessage] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    toast.dismiss();
+  }, []);
+
   const checkInvalid = () => {
     if (!email) {
       toast.warn("Please input your email");
@@ -23,7 +29,10 @@ const LoginPage: React.FC = () => {
     }
     return true;
   }
-  toast.dismiss();
+
+  const redirectPhoneLogin = () => {
+    navigate('/phonelogin'); // Redirect when the button is clicked
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +62,7 @@ const LoginPage: React.FC = () => {
         },
       });
 
-      // 👉 Lưu vào AuthContext
+      //  Lưu vào AuthContext
       login(userRes.data);
       navigate('/');
     } catch (err) {
@@ -68,6 +77,11 @@ const LoginPage: React.FC = () => {
       <div className={styles.container}>
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
+
+          <button className={styles.btnPhone} onClick={redirectPhoneLogin}>
+            <FaPhone className={styles.iconPhone} />
+            <span className={styles.btnText}>PHONE</span>
+          </button>
           <div className='input-field'>
             <input
               type="text"

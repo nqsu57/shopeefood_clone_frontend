@@ -3,6 +3,7 @@ import axios from 'axios';
 import styles from './AddressModal.module.css';
 import AddressSelection from '../ProvinceDistrictWardSelector';
 import { Province, District, Ward, Address } from '../../types/address'
+import { toast } from 'react-toastify';
 
 
 interface AddressModalProps {
@@ -83,8 +84,9 @@ function AddressModal({
     const handleSubmit = async () => {
         // console.log(name, phone, address, provinceId, districtId, wardId, selectedTag);
         if (!name || !phone || !address || !provinceId || !districtId || !wardId) {
-            alert('Please fill all fields');
+            toast.error('Please fill all fields');
             return;
+
         }
         // onSave({
         //     recipient_name: name,
@@ -107,16 +109,13 @@ function AddressModal({
             is_default: isDefault,
         };
         try {
-            console.log("🔥 typeof onSave:", typeof onSave);
-            console.log("🔥 onSave === handleSaveAddress ?", onSave.name);
             const updated = await onSave(payload);
-            console.log('Address updated:', updated);
+            toast.success('Address saved successfully!');
             onClose();
         } catch (err) {
             console.error('Failed to save address', err);
-            alert('Failed to save address. Please try again.');
+            toast.error('Failed to save address. Please try again.');
         }
-
 
     };
 

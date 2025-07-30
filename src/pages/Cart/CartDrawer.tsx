@@ -200,7 +200,15 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <p>Tạm tính:</p>
             <p>{totalAmount.toLocaleString()}₫</p>
           </div>
-          <button className={styles.redirectOrder}><Link className={styles.redirectOrder} to='/order'>Đặt hàng</Link></button>
+          {cartItems.length > 0 ? (
+            <Link to="/order" className={styles.redirectOrder}   onClick={() => {onClose(); }}>
+              Đặt hàng
+            </Link>
+          ) : (
+            <button className={styles.redirectOrder} disabled>
+              Đặt hàng
+            </button>
+          )}
           {cartItems.length > 0 && (
             <button
               className={styles.clearCartBtn}

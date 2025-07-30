@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import styles from './Avatar.module.css'; // Tùy chỉnh CSS riêng nếu cần
+import styles from './Avatar.module.css';
+import { toast } from 'react-toastify';
+
 
 interface AvatarUploaderProps {
     initialAvatarUrl: string;
@@ -24,7 +26,7 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({ initialAvatarUrl, onAva
         if (!file) return;
 
         if (file.size > 5 * 1024 * 1024) {
-            alert('File size must be under 5MB');
+            toast.error('File size must be under 5MB');
             return;
         }
 
@@ -51,7 +53,7 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({ initialAvatarUrl, onAva
             }
         } catch (err) {
             console.error('Upload failed', err);
-            alert('Upload failed. Try again.');
+            toast.error('Upload failed. Try again.');
         } finally {
             setUploading(false);
         }

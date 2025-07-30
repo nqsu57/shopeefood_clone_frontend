@@ -4,20 +4,20 @@ function Footer() {
     return (
         <footer className={styles.footer}>
             <div className={styles.contact}>
-                <h3>Công ty</h3>
+                <h3>Company</h3>
                 <ul>
-                    <li>Giới thiệu</li>
-                    <li>Trung tâm trợ giúp</li>
-                    <li>Ứng dụng</li>
-                    <li>Biến đổi số cùng Bảo mật thông tin</li>
-                    <li>Liên hệ</li>
-                    <li>Hợp tác nhãn viên giao hàng</li>
-                    <li>Đăng ký quán ShopeeFood Uni</li>
+                    <li>About Us</li>
+                    <li>Help Center</li>
+                    <li>App</li>
+                    <li>Digital Transformation & Data Privacy</li>
+                    <li>Contact</li>
+                    <li>Delivery Partner Cooperation</li>
+                    <li>Sign up for ShopeeFood Uni</li>
                     <li>Shopee Blog</li>
                 </ul>
             </div>
             <div className={styles.appLinks}>
-                <h3>Ứng dụng ShopeeFood</h3>
+                <h3>ShopeeFood App</h3>
                 <div>
                     <a href="https://www.apple.com/app-store/" target="_blank" rel="noopener noreferrer">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Download_on_the_App_Store_RGB_blk.svg/2560px-Download_on_the_App_Store_RGB_blk.svg.png" alt="App Store" />
@@ -43,17 +43,16 @@ function Footer() {
                 </div>
             </div>
             <div className={styles.address}>
-                <h3>Địa chỉ công ty</h3>
-                <p>Công ty Cổ Phần Foody</p>
-                <p>Lầu 6, Tòa nhà FPT, số 244 đường Cống Quỳnh, phường Phạm Ngũ Lão, Quận 1, TP.HCM</p>
-                <p>Giấy CNĐKKD số 031282036 do Sở Kế hoạch và Đầu tư TP.HCM cấp ngày 11/02/2012</p>
-                <p>Chủ tịch hội đồng quản trị: Nguyễn Hải Đăng</p>
+                <h3>Company Address</h3>
+                <p>Foody Corporation</p>
+                <p>6th Floor, FPT Building, 244 Cong Quynh Street, Pham Ngu Lao Ward, District 1, HCM City</p>
+                <p>Business Registration No. 031282036 issued by the Department of Planning and Investment of HCM City on 11/02/2012</p>
+                <p>Chairman of the Board: Nguyen Hai Dang</p>
                 <p>Hotline: 028 7109 6879 | cskh@support.shopeefood.vn</p>
                 <div className={styles.certification}>
-                    <img src="https://shopeefood.vn/app/assets/img/gov_seals1.jpg?4534b28245a7aad9805fbddc90f873d8" alt="Đã Đăng Ký" />
+                    <img src="https://shopeefood.vn/app/assets/img/gov_seals1.jpg?4534b28245a7aad9805fbddc90f873d8" alt="Registered" />
                 </div>
             </div>
-
         </footer>
     );
 };

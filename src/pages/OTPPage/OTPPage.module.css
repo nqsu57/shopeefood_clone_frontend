@@ -1,0 +1,86 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+
+.instruction {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    max-width: 340px;
+    line-height: 1.5;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.codeInput {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 260px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    padding: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.codeInputField {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+}
+
+/* .codeInputField:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 94, 0, 0.3);
+} */
+
+.error {
+    color: #e63946;
+    font-size: 12px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 260px;
+}
+
+.button {
+    width: 260px;
+    padding: 12px;
+    background: linear-gradient(90deg, #ff5e00, #ff7a33);
+    color: #fff;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background: linear-gradient(90deg, #ff4500, #ff6a00);
+    transform: translateY(-2px);
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+.button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}

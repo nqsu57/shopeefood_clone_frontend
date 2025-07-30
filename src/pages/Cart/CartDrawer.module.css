@@ -120,18 +120,6 @@
   justify-content: space-between;
 }
 
-.redirectOrder {
-  background-color: #EE4D2D;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 4px;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s ease;
-}
 
 .quantityInput {
   width: 30px;
@@ -162,8 +150,16 @@ input[type=number]::-webkit-inner-spin-button {
   text-align: center;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 8px;
   transition: background-color 0.2s ease;
+  display: block;
+  text-decoration: none;
+  box-sizing: border-box;
+  margin-top: 8px;
+}
+
+
+.clearCartBtn:hover {
+  background-color: #d8431f;
 }
 
 .confirmModal {
@@ -218,4 +214,33 @@ input[type=number]::-webkit-inner-spin-button {
 
 .confirmModal button:last-child:hover {
   background: #BFBFBF;
+}
+
+.redirectOrder {
+  background-color: #EE4D2D;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+  display: block;
+  text-decoration: none;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.redirectOrder:hover {
+  background-color: #d8431f;
+}
+
+button.redirectOrder:disabled {
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
 }

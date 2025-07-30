@@ -21,14 +21,16 @@ import Order from './pages/Order/OrderPage';
 import Address from './pages/User/UserAddressPage';
 import OrderDetail from './pages/Order/OrderDetailPage';
 import SearchPage from './component/Search/SearchPage';
-
+import PhoneLogin from './pages/Login/PhoneLogin';
+import OTP from './pages/OTPPage/OTPPage';
+import ResetPasswordPage from './pages/Password/ResetPassword';
 
 function App() {
   const [showCart, setShowCart] = useState(false);
   const { isLoading } = useAuth();
 
   if (isLoading) {
-    return <div>Đang tải thông tin người dùng...</div>; 
+    return <div>Đang tải thông tin người dùng...</div>;
   }
 
 
@@ -42,31 +44,34 @@ function App() {
         closeOnClick
         className="toast_container" />
       {/* <AuthProvider> */}
-        <Navbar onCartClick={() => setShowCart(true)} />
-        <main className="p-4">
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/account/profile" element={<Profile />} />
-            <Route path="/account/myorder" element={<MyOrders />} />
-            <Route path="/forgotpassword" element={<ForgotPassword />} />
-            <Route path="/resetpassword" element={<ResetPassword />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/food/:id" element={<FoodCardDetail />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/account/address" element={<Address />} />
-            <Route path="/order/:id" element={<OrderDetail />} />
-            <Route path="/search" element={<SearchPage />} />
-          </Routes>
-        </main>
+      <Navbar onCartClick={() => setShowCart(true)} />
+      <main className="p-4">
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/account/profile" element={<Profile />} />
+          <Route path="/account/myorder" element={<MyOrders />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/food/:id" element={<FoodCardDetail />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/account/address" element={<Address />} />
+          <Route path="/order/:id" element={<OrderDetail />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/phonelogin" element={<PhoneLogin />} />
+          <Route path="/otp-page" element={<OTP />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+        </Routes>
+      </main>
 
-        {showCart && (
-          <>
-            <div className="overlay" onClick={() => setShowCart(false)} />
-            <CartDrawer isOpen={showCart} onClose={() => setShowCart(false)} />
-          </>
-        )}
-        <Footer onCartClick={() => setShowCart(true)} />
+      {showCart && (
+        <>
+          <div className="overlay" onClick={() => setShowCart(false)} />
+          <CartDrawer isOpen={showCart} onClose={() => setShowCart(false)} />
+        </>
+      )}
+      <Footer onCartClick={() => setShowCart(true)} />
 
       {/* </AuthProvider> */}
     </>

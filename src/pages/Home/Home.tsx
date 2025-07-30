@@ -26,10 +26,7 @@ function Home() {
       <div className={style.container}>
         <div className={style.listItem}>
           {foods.map((food) => (
-            // <FoodCard key={food.id} food={food} />
-            <Link to={`/food/${food.id}`} key={food.id}>
-              <FoodCard food={food} />
-            </Link>
+            <FoodCard key={food.id} food={food} />
           ))}
         </div>
       </div>

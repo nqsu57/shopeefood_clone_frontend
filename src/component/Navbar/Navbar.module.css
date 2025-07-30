@@ -28,14 +28,14 @@
 
 .searchInput {
     width: 60%;
-    padding: 8px 12px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
     outline: none;
 }
 
 .searchButton {
-    padding: 8px 12px;
+    padding: 10px 12px;
     border: none;
     background-color: #ee4d2d;
     color: white;
@@ -63,7 +63,7 @@
     border: 1px solid #ee4d2d;
     color: #ee4d2d;
     padding: 6px 12px;
-    border-radius: 4px;
+    /* border-radius: 4px; */
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -108,7 +108,7 @@
 
 .userName {
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .profileLink {
@@ -116,4 +116,87 @@
     align-items: center;
     text-decoration: none;
     color: inherit;
+}
+
+.userMenuWrapper {
+    position: relative;
+    outline: none;
+}
+
+/* userInfo vẫn giữ flex row */
+.userInfo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+}
+
+/* Dropdown menu: canh ngang với icon toggle, tức là canh phải với toggle */
+.userDropdownMenu {
+    position: absolute;
+    top: 120%;
+    /* đặt thấp hơn một chút để cách userInfo */
+    right: 0;
+    /* canh phải dropdown với right của userMenuWrapper */
+    background-color: white;
+    border: 1px solid #ddd;
+    /* border-radius: 6px; */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    /* rộng bằng hoặc rộng hơn toggle */
+    padding: 0;
+    z-index: 1500;
+    /* để menu xuất hiện ngang với icon toggle, ta sẽ căn right: 0 */
+}
+
+/* Dropdown items */
+.dropdownItem {
+    display: block;
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng */
+    padding: 10px 16px;
+    text-align: left;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    white-space: nowrap;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #ebebeb;
+}
+
+/* Button trong dropdown */
+.dropdownItem button {
+    background: none;
+    padding: 10px 16px;
+    /* Padding đồng nhất */
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng */
+    text-align: left;
+    cursor: pointer;
+}
+
+/* Hover effect */
+.dropdownItem:hover,
+.dropdownItem:focus {
+    background-color: #ebebeb;
+    outline: none;
+    border-radius: 0;
+
+}
+
+/* .dropdownItem:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.dropdownItem:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+} */
+
+/* nút trong dropdown */
+.userDropdownMenu button.dropdownItem {
+    border: none;
 }

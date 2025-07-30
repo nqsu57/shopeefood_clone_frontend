@@ -94,6 +94,11 @@
 .submenuItem {
     padding-left: 20px;
     cursor: pointer;
+    list-style-type: none;
+}
+
+.submenu {
+    padding-left: 20px;
 }
 
 
