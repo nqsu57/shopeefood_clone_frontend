@@ -55,7 +55,6 @@ const LoginPage: React.FC = () => {
       const token = response.data.access_token;
       localStorage.setItem('token', token);
 
-
       const userRes = await axios.get('http://localhost:8000/api/get_user', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -64,10 +63,28 @@ const LoginPage: React.FC = () => {
 
       //  Lưu vào AuthContext
       login(userRes.data);
-      navigate('/');
+      console.log("user log",userRes.data)
+      if (userRes.data.role === 'admin') {
+        navigate('/admin/user-list');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       console.error('Login error', err);
-      toast.error("Sai email hoặc mật khẩu");
+      if (axios.isAxiosError(err) && err.response) {
+        const status = err.response.status;
+        const detail = err.response.data.detail;
+
+        if (status === 401) {
+          toast.error("Incorrect email or password.");
+        } else if (status === 403) {
+          toast.error("Your account is not verified or has been disabled.");
+        } else {
+          toast.error("An unexpected error occurred. Please try again.");
+        }
+      } else {
+        toast.error("Network error. Please check your connection.");
+      }
     }
   };
 
@@ -77,8 +94,7 @@ const LoginPage: React.FC = () => {
       <div className={styles.container}>
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
-
-          <button className={styles.btnPhone} onClick={redirectPhoneLogin}>
+          <button className={styles.btnPhone} onClick={redirectPhoneLogin} type="button">
             <FaPhone className={styles.iconPhone} />
             <span className={styles.btnText}>PHONE</span>
           </button>

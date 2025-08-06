@@ -1,0 +1,170 @@
+/* Container tổng thể */
+.pageContainer {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 32px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+}
+
+/* Header section */
+.headerUser {
+    background-color: #1E1E1E;
+    padding: 20px;
+    border-radius: 10px;
+    color: #E0E0E0;
+    text-align: center;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.avatarContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.avatar {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e5e7eb;
+}
+
+.verified {
+    background-color:  #009688;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+
+/* Tiêu đề */
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 12px;
+    color: #E0E0E0 ;
+    text-align: center;
+}
+
+/* Các section con */
+.sectionContainer {
+    background-color: #2C2C2C;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* Tiêu đề của section */
+.sectionTitle {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #222;
+}
+
+/* Style riêng theo từng vai trò */
+.driverSection {
+    background-color: #e7f3ff;
+    border-left: 6px solid #3399ff;
+}
+
+.restaurantSection {
+    background-color: #fff8dc;
+    border-left: 6px solid #ffcc00;
+}
+
+.addressSection {
+    background-color: #e8fff0;
+    border-left: 6px solid #00cc66;
+}
+
+/* Item trong địa chỉ */
+.addressItem {
+    padding: 12px 0;
+    border-bottom: 1px dashed #ccc;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.addressItem:last-child {
+    border-bottom: none;
+}
+
+/* Responsive hỗ trợ mobile */
+@media (max-width: 600px) {
+    .pageContainer {
+        margin: 16px;
+        padding: 16px;
+    }
+
+    .title {
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+
+    .sectionContainer {
+        padding: 12px;
+    }
+
+    .sectionTitle {
+        font-size: 18px;
+    }
+
+    .addressItem {
+        font-size: 14px;
+        padding: 8px 0;
+    }
+}
+
+/* New styles to match the image */
+.headerUser .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.headerUser .avatarContainer {
+    margin-right: 20px;
+}
+
+.inforLabel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding-left: 100px;
+}
+
+.infoRow {
+    display: flex;
+    text-align: left;
+}
+
+.label {
+    width: 50%;
+    font-weight: 600;
+    color: #4b5563;
+    text-align: left;
+}
+
+.value {
+    width: 66.67%;
+    color: #1f2937;
+    text-align: left;
+}

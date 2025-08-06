@@ -19,4 +19,10 @@ export interface User {
     gender: string;
     avatar_url?: string;
     default_address?: Address;
+    role: string;
+    is_verified: boolean;
+    driver_profile?: any;
+    restaurant_profile?: any;
+    addresses: Address[];
+
 }

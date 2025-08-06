@@ -120,19 +120,19 @@ function MyOrder() {
         <div className={styles.container}>
             <UserSidebar user={user} />
             <div className={styles.mainContent}>
-              <div className={styles.tabsContainer}>
-                        <div className={styles.tabs}>
-                            {tabs.map(tab => (
-                                <button
-                                    key={tab.value}
-                                    onClick={() => setActiveTab(tab.value)}
-                                    className={activeTab === tab.value ? styles.activeTab : styles.tab}
-                                >
-                                    {tab.label}
-                                </button>
-                            ))}
-                        </div>
+                <div className={styles.tabsContainer}>
+                    <div className={styles.tabs}>
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.value}
+                                onClick={() => setActiveTab(tab.value)}
+                                className={activeTab === tab.value ? styles.activeTab : styles.tab}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
                     </div>
+                </div>
 
                 {orders.length === 0 ? (
                     <p className={styles.noOrders}>Không có đơn hàng nào.</p>
@@ -149,7 +149,7 @@ function MyOrder() {
                             </div>
 
                             {order.items.length === 0 ? (
-                                <p className={styles.noOrders}>Đơn hàng chưa có món nào.</p>
+                                <p className={styles.noOrders}>The order does not have any items yet</p>
                             ) : (
                                 <div className={styles.content}>
                                     {order.items.map((item, idx) => (
@@ -167,8 +167,8 @@ function MyOrder() {
                                                     {item.toppings && item.toppings.length > 0 && (
                                                         <p><strong>- Topping:</strong> {item.toppings.join(', ')}</p>
                                                     )}
-                                                    <p><strong>- Số lượng:</strong> {item.quantity}</p>
-                                                    <p><strong>- Giá:</strong> {(item.price ?? 0).toLocaleString()}đ</p>
+                                                    <p><strong>- Quantity:</strong> {item.quantity}</p>
+                                                    <p><strong>- Price:</strong> {(item.price ?? 0).toLocaleString()}đ</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -178,7 +178,9 @@ function MyOrder() {
 
                             <div className={styles.footer}>
                                 <button className={styles.detailButton}
-                                  onClick={() => navigate(`/order/${order.orderID}`)} >Xem chi tiết</button>
+                                    onClick={() => navigate(`/order/${order.orderID}`)} >
+                                    Xem chi tiết
+                                </button>
                                 <div className={styles.totalBlock}>
                                     <p>
                                         <strong>Thành tiền:</strong>
@@ -186,7 +188,7 @@ function MyOrder() {
                                     </p>
                                 </div>
 
-                            
+
                             </div>
                         </div>
                     ))

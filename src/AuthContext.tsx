@@ -10,6 +10,7 @@ export interface UserType {
   avatar_url: string;
   gender: string;
   default_address?: any;
+  role: "admin" | "user" | "driver" | "restaurant";
 }
 
 interface AuthContextType {

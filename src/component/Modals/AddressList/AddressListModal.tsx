@@ -67,7 +67,7 @@ export default function AddressListModal({ currentAddressId, onClose, onConfirm 
             )
             : [...updatedAddresses, res.data];
 
-        console.log("✅ res.data trước khi set & return:", res.data);
+        console.log("res.data trước khi set & return:", res.data);
 
         setAddresses(
             newAddresses.sort(
@@ -77,8 +77,8 @@ export default function AddressListModal({ currentAddressId, onClose, onConfirm 
 
         setIsModalOpen(false);
         setEditingAddress(null);
-        console.log("📥 API response:", res);
-        console.log("📥 API response.data:", res.data);
+        // console.log("API response:", res);
+        // console.log("API response.data:", res.data);
         return res.data;
     };
 
@@ -123,7 +123,6 @@ export default function AddressListModal({ currentAddressId, onClose, onConfirm 
                 </div>
 
                 <div className={styles.actions}>
-                    <button onClick={onClose} className={styles.cancelBtn}>Cancel</button>
                     <button
                         disabled={!selectedId}
                         className={styles.saveBtn}
@@ -134,6 +133,8 @@ export default function AddressListModal({ currentAddressId, onClose, onConfirm 
                     >
                         Confirm
                     </button>
+                    <button onClick={onClose} className={styles.cancelBtn}>Cancel</button>
+
                 </div>
 
                 {editingAddress && (

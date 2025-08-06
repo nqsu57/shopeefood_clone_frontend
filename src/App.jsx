@@ -24,6 +24,15 @@ import SearchPage from './component/Search/SearchPage';
 import PhoneLogin from './pages/Login/PhoneLogin';
 import OTP from './pages/OTPPage/OTPPage';
 import ResetPasswordPage from './pages/Password/ResetPassword';
+import AdminUserList from './pages/Admin/AdminUserList';
+import AdminRoute from './component/Admin/AdminRoute';
+import UserGeneralInfo from './component/Admin/UserGeneralInfo';
+import RestaurantInfo from './component/Admin/RestaurantInfo';
+import DriverInfo from './component/Admin/DriverInfo';
+import UserAddresses from './component/Admin/UserAddresses';
+import AdminUserDetail from './pages/Admin/AdminUserDetail';
+
+
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -62,6 +71,20 @@ function App() {
           <Route path="/phonelogin" element={<PhoneLogin />} />
           <Route path="/otp-page" element={<OTP />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/admin/user-list"
+            element={
+              <AdminRoute>
+                <AdminUserList />
+              </AdminRoute>
+            }
+          />
+          <Route path="/admin/users/:id"
+            element={
+              <AdminRoute>
+                <AdminUserDetail />
+              </AdminRoute>
+            }
+          />
         </Routes>
       </main>
 
